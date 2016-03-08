@@ -15,10 +15,12 @@ use Magento\Framework\View\Element\Template;
  */
 class RenderLayered extends Template
 {
+    // @codingStandardsIgnoreStart
     /**
      * @var string
      */
     protected $_template = 'Part_AdvLayNav::product/layered/renderer.phtml';
+    // @codingStandardsIgnoreEnd
 
     /**
      * @var \Magento\Eav\Model\Attribute

@@ -5,10 +5,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+// @codingStandardsIgnoreFile
 
 require_once realpath(__DIR__ . '/../../vendor/autoload.php');
 
- function __()
- {
-     return $argc = func_get_args();
- }
+function __()
+{
+    return $argc = func_get_args();
+}
