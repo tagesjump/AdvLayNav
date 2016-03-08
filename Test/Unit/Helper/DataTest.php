@@ -26,7 +26,13 @@
      {
          $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
 
-         $this->attributeMock = $this->getMock('\Magento\Catalog\Model\ResourceModel\Eav\Attribute', [], [], '', false);
+         $this->attributeMock = $this->getMock(
+            '\Magento\Catalog\Model\ResourceModel\Eav\Attribute',
+            ['setData', 'getData', 'hasData'],
+            [],
+            '',
+            false
+        );
 
          $this->advLayNavHelper = $objectManager->getObject('\Part\AdvLayNav\Helper\Data', []);
      }
