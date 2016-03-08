@@ -48,14 +48,14 @@ class DataTest extends \PHPUnit_Framework_TestCase
             ->with('additional_data')
             ->will($this->returnValue($dataFromDb));
 
-        $i = 1;
+        $counter = 1;
         foreach ($attributeData as $key => $value) {
             $this->attributeMock
-                ->expects($this->at($i))
+                ->expects($this->at($counter))
                 ->method('getData')
                 ->with($key)
                 ->willReturn($value);
-            $i++;
+            $counter++;
         }
 
         if (count($attributeData)) {
@@ -101,9 +101,9 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $result = $this->advLayNavHelper->isAdvLayNavRangeSliderAttribute($this->attributeMock);
         if ($boolResult) {
             $this->assertTrue($result);
-        } else {
-            $this->assertFalse($result);
+            return;
         }
+        $this->assertFalse($result);
     }
 
     /**
@@ -141,9 +141,9 @@ class DataTest extends \PHPUnit_Framework_TestCase
         $result = $this->advLayNavHelper->isAdvLayNavRangeSliderAttribute($this->attributeMock);
         if ($boolResult) {
             $this->assertTrue($result);
-        } else {
-            $this->assertFalse($result);
+            return;
         }
+        $this->assertFalse($result);
     }
 
     /**

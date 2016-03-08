@@ -12,6 +12,7 @@ use Magento\Framework\View\Element\Template;
 
 /**
  * Class RenderLayered
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class RenderLayered extends Template
 {
@@ -107,12 +108,12 @@ class RenderLayered extends Template
         if (is_null($this->minValue) || is_null($this->maxValue)) {
             $productCollection = $this->filter->getLayer()->getProductCollection();
             foreach ($productCollection as $product) {
-                $productAttributeValue = $product->getData($this->eavAttribute->getAttributeCode());
-                if (is_null($this->minValue) || $this->minValue > $productAttributeValue) {
-                    $this->minValue = $productAttributeValue;
+                $prodAttributeValue = $product->getData($this->eavAttribute->getAttributeCode());
+                if (is_null($this->minValue) || $this->minValue > $prodAttributeValue) {
+                    $this->minValue = $prodAttributeValue;
                 }
-                if (is_null($this->maxValue) || $this->maxValue < $productAttributeValue) {
-                    $this->maxValue = $productAttributeValue;
+                if (is_null($this->maxValue) || $this->maxValue < $prodAttributeValue) {
+                    $this->maxValue = $prodAttributeValue;
                 }
             }
             $this->maxValue++;

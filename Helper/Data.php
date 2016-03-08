@@ -37,19 +37,19 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function assembleAdditionalDataEavAttribute(Attribute $attribute)
     {
-        $initialAdditionalData = [];
+        $iniAdditionalData = [];
         $additionalData = (string) $attribute->getData('additional_data');
         if (!empty($additionalData)) {
             $additionalData = unserialize($additionalData);
             if (is_array($additionalData)) {
-                $initialAdditionalData = $additionalData;
+                $iniAdditionalData = $additionalData;
             }
         }
 
         $dataValue = $attribute->getData($this->inputKey);
         if (!is_null($dataValue)) {
-            $initialAdditionalData[$this->inputKey] = $dataValue;
-            $attribute->setData('additional_data', serialize($initialAdditionalData));
+            $iniAdditionalData[$this->inputKey] = $dataValue;
+            $attribute->setData('additional_data', serialize($iniAdditionalData));
         }
 
         return $this;
