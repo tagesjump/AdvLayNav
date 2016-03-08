@@ -6,14 +6,6 @@
 
 Advanced Layered Navigation for Magento2.
 
-## Install
-
-Via Composer
-
-``` bash
-$ composer require part/advlaynav
-```
-
 ## Security
 
 If you discover any security related issues, please email info@part.berlin instead of using the issue tracker.
