@@ -20,6 +20,11 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
+    private $urlBuilderMock;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $eavAttributeMock;
 
     /**
@@ -50,6 +55,14 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->contextMock = $this->getMock('\Magento\Framework\View\Element\Template\Context', [], [], '', false);
+        $this->urlBuilderMock = $this->getMock(
+            '\Magento\Framework\Url',
+            ['getCurrentUrl', 'getRedirectUrl', 'getUrl'],
+            [],
+            '',
+            false
+        );
+        $this->contextMock->expects($this->any())->method('getUrlBuilder')->willReturn($this->urlBuilderMock);
         $this->eavAttributeMock = $this->getMock(
             '\Magento\Eav\Model\Entity\Attribute',
             ['getAttributeCode'],
@@ -124,5 +137,21 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
     {
         $this->block->setAdvLayNavFilter($this->filterMock);
         $this->assertSame(46, $this->block->getMaxValue());
+    }
+
+    public function testBuildUrl()
+    {
+        $args = [
+            '_current' => true,
+            '_use_rewrite' => true,
+            '_query' => [
+                $this->attributeCode => 'option_id_placeholder',
+            ],
+        ];
+        $this->urlBuilderMock->expects($this->once())
+            ->method('getUrl')
+            ->with('*/*/*', $args)
+            ->willReturn('http://example.com/');
+        $this->assertSame('http://example.com/', $this->block->buildUrl());
     }
 }
