@@ -33,5 +33,5 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 
 [link-travis]: https://travis-ci.org/PartBerlin/AdvLayNav
 [link-coveralls]: https://coveralls.io/github/PartBerlin/AdvLayNav
-[link-author]: https://github.com/PartBerlin
+[link-author]: https://part.berlin/
 [link-contributors]: ../../contributors
