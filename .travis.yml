@@ -7,7 +7,7 @@ php:
     - 7.0
 
 install:
-    - composer install
+    - composer install --repository-url=https://repo.magento.com/
 
 script:
     - php vendor/bin/phpunit
