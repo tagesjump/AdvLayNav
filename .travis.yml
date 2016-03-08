@@ -11,7 +11,7 @@ install:
     - composer install
 
 script:
-    - php vendor/bin/phpunit -c vendor/magento/magento2-base/dev/tests/unit/phpunit.xml Test/
+    - php vendor/bin/phpunit
 
 env:
     global:
