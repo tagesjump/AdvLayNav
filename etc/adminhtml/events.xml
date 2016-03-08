@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © PART <info@part-online.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="adminhtml_catalog_product_attribute_edit_frontend_prepare_form">
+        <observer name="advlaynav_adminhtml_catalog_product_attribute_edit_frontend_prepare_form"
+            instance="Part\AdvLayNav\Observer\AddAdditionalValuesToAttributeObserver" />
+    </event>
+    <event name="product_attribute_form_build_front_tab">
+        <observer name="add_advlaynav_fields_to_attribute"
+            instance="Part\AdvLayNav\Observer\AddFieldsToAttributeObserver"/>
+    </event>
+</config>

@@ -1,0 +1,35 @@
+<?php
+/**
+ * Copyright © PART <info@part-online.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+ // @codingStandardsIgnoreFile
+
+ /** @var $block \Part\AdvLayNav\Block\LayeredNavigation\RenderLayered */
+?>
+<p>
+  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+</p>
+<div id="slider-range"></div>
+<script>
+    require(["jquery", "jquery/ui"], function ($) {
+        $( "#slider-range" ).slider({
+            range: true,
+            min: <?php echo $block->getMinValue() ?>,
+            max: <?php echo $block->getMaxValue() ?>,
+            values: [ <?php echo $block->getMinValue() ?>, <?php echo $block->getMaxValue() ?> ],
+            slide: function( event, ui ) {
+                $( "#amount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+            },
+            change: function( event, ui ) {
+                url = "<?php echo $block->buildUrl() ?>";
+                window.location = url.replace("option_id_placeholder", ui.values[ 0 ] + "-" + ui.values[ 1 ]);
+            }
+        });
+        $( "#amount" ).val( $( "#slider-range" ).slider( "values", 0 ) +
+          " - " + $( "#slider-range" ).slider( "values", 1 ) );
+    });
+</script>
