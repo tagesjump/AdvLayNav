@@ -18,35 +18,47 @@ class RenderLayered extends Template
 {
     // @codingStandardsIgnoreStart
     /**
+     * The template file for our RenderLayered.
+     *
      * @var string
      */
     protected $_template = 'Part_AdvLayNav::product/layered/renderer.phtml';
     // @codingStandardsIgnoreEnd
 
     /**
+     * The attribute from the filter of the RenderLayered.
+     *
      * @var \Magento\Eav\Model\Attribute
      */
     private $eavAttribute;
 
     /**
+     * The filter of the RenderLayered.
+     *
      * @var \Magento\Catalog\Model\Layer\Filter\AbstractFilter
      */
     private $filter;
 
     /**
+     * The maximum value of the attribute.
+     *
      * @var float
      */
     private $maxValue;
 
     /**
+     * The minimum value of the attribute.
+     *
      * @var float
      */
     private $minValue;
 
     /**
-    * @param Template\Context $context
-    * @param Attribute $eavAttribute
-    * @param array $data
+     * Creates an RenderLayered object.
+     *
+     * @param Template\Context $context
+     * @param Attribute $eavAttribute
+     * @param array $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -59,6 +71,8 @@ class RenderLayered extends Template
     }
 
     /**
+     * Sets the filter on this RenderLayered object.
+     *
      * @param \Magento\Catalog\Model\Layer\Filter\AbstractFilter $filter
      * @return $this
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -72,6 +86,8 @@ class RenderLayered extends Template
     }
 
     /**
+     * Returns the minimum value of the attribute for the current product collection.
+     *
      * @return float
      */
     public function getMinValue()
@@ -82,6 +98,8 @@ class RenderLayered extends Template
     }
 
     /**
+     * Returns the maximum value of the attribute for the current product collection.
+     *
      * @return float
      */
     public function getMaxValue()
@@ -92,6 +110,8 @@ class RenderLayered extends Template
     }
 
     /**
+     * Builds a url for the current attribute and returns it.
+     *
      * @return string
      */
     public function buildUrl()
@@ -101,6 +121,8 @@ class RenderLayered extends Template
     }
 
     /**
+     * Initializes the minimum and maximum value of the attribute and attaches them to the RenderLayered object.
+     *
      * @return void
      */
     private function initMinMaxValues()

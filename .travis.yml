@@ -11,6 +11,7 @@ install:
     - composer install --prefer-dist
 
 script:
+    - php vendor/bin/phpdoc run -d Block,Helper,Model,Observer -t build/doc
     - php vendor/bin/phpcs --standard=PSR2 Block/ Helper/ Model/ Observer/ Test/
     - php vendor/bin/phpmd Block/,Helper/,Model/,Observer/,Test/ text cleancode,codesize,controversial,design,naming,unusedcode
     - php vendor/bin/phpcpd Block/ Helper/ Model/ Observer/ Test/

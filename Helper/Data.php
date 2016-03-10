@@ -16,11 +16,15 @@
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
     /**
+     * The key that stores the AdvLayNav type in the attribute.
+     *
      * @var string
      */
     private $inputKey = AdvLayNav::INPUT_TYPE_KEY;
 
     /**
+     * Checks if the given attribute is a range slider.
+     *
      * @param Attribute $attribute
      * @return bool
      */
@@ -32,6 +36,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Takes the AdvLayNav data if they exist from the attribute and stores them in additional data of the attribute.
+     *
      * @param Attribute $attribute
      * @return $this
      */
@@ -56,6 +62,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Takes the AdvLayNav data from the additional data of the attribute if they exist and stores them in the data of
+     * the attribute.
+     *
      * @param Attribute $attribute
      * @return void
      */

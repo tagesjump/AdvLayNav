@@ -15,11 +15,15 @@ use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 class EavAttribute
 {
     /**
+     * The AdvLayNav helper.
+     *
      * @var \Part\AdvLayNav\Helper\Data
      */
     private $advLayNavHelper;
 
     /**
+     * Creates an EavAttribute plugin that surrounds the beforeSave function of an EavAttribute.
+     *
      * @param \Part\AdvLayNav\Helper\Data $advLayNavHelper
      */
     public function __construct(\Part\AdvLayNav\Helper\Data $advLayNavHelper)
