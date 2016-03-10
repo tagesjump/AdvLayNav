@@ -18,11 +18,15 @@ use Part\AdvLayNav\Model\AdvLayNav;
 class AddFieldsToAttributeObserver implements ObserverInterface
 {
     /**
+     * The module manager.
+     *
      * @var \Magento\Framework\Module\Manager
      */
     private $moduleManager;
 
     /**
+     * Creates an observer for the event product_attribute_form_build_front_tab.
+     *
      * @param Manager $moduleManager
      */
     public function __construct(Manager $moduleManager)
@@ -31,6 +35,8 @@ class AddFieldsToAttributeObserver implements ObserverInterface
     }
 
     /**
+     * Adds an AdvLayNav type select to the form.
+     *
      * @param \Magento\Framework\Event\Observer $observer
      * @return void
      */

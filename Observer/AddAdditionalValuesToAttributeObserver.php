@@ -18,11 +18,15 @@ use Part\AdvLayNav\Model\AdvLayNav;
 class AddAdditionalValuesToAttributeObserver implements ObserverInterface
 {
     /**
+     * The module manager.
+     *
      * @var \Magento\Framework\Module\Manager
      */
     private $moduleManager;
 
     /**
+     * Creates an observer for the event adminhtml_catalog_product_attribute_edit_frontend_prepare_form.
+     *
      * @param Manager $moduleManager
      */
     public function __construct(Manager $moduleManager)
@@ -31,6 +35,8 @@ class AddAdditionalValuesToAttributeObserver implements ObserverInterface
     }
 
     /**
+     * Checks if the given attribute has AdvLayNav data and sets them to the data of the form.
+     *
      * @param \Magento\Framework\Event\Observer $observer
      * @return void
      */
