@@ -9,8 +9,17 @@ namespace Part\AdvLayNav\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 
+/**
+ * Class ProcessLayoutRenderElement
+ */
 class ProcessLayoutRenderElement implements ObserverInterface
 {
+    /**
+     * Surrounds the content of the blocks category.products.list and catalog.leftnav with span elements to find them
+     * later in the DOM.
+     *
+     * @param \Magento\Framework\Event\Observer $observer
+     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $event = $observer->getEvent();
