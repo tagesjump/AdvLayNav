@@ -10,9 +10,9 @@ namespace Part\AdvLayNav\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
 /**
- * Class ProcessLayoutRenderElement
+ * Class ProcessLayoutRenderElementObserver
  */
-class ProcessLayoutRenderElement implements ObserverInterface
+class ProcessLayoutRenderElementObserver implements ObserverInterface
 {
     /**
      * Surrounds the content of the blocks category.products.list and catalog.leftnav with span elements to find them
@@ -22,10 +22,10 @@ class ProcessLayoutRenderElement implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $event = $observer->getEvent();
-        $name = $event->getElementName();
+        $name = $observer->getElementName();
         if ($name === 'category.products.list' || $name === 'catalog.leftnav') {
-            $transport = $event->getTransport();
+            /** @var \Magento\Framework\DataObject $transport */
+            $transport = $observer->getTransport();
             $output = $transport->getData('output');
             $output = sprintf(
                 '<span id="advlaynav_%1$s_before"></span>%2$s<span id="advlaynav_%1$s_after"></span>',

@@ -9,6 +9,6 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="core_layout_render_element">
-        <observer name="pagecache" instance="Part\AdvLayNav\Observer\ProcessLayoutRenderElement"/>
+        <observer name="pagecache" instance="Part\AdvLayNav\Observer\ProcessLayoutRenderElementObserver"/>
     </event>
 </config>
