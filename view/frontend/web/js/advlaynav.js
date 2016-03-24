@@ -5,7 +5,7 @@
  * file that was distributed with this source code.
  */
 
-define(['jquery', 'domReady', 'jquery/ui',], function ($, domReady) {
+define(['jquery', 'domReady', 'mage/apply/main', 'jquery/ui'], function ($, domReady, mage) {
     'use strict';
 
     $.widget('part.advlaynav', {
@@ -15,11 +15,32 @@ define(['jquery', 'domReady', 'jquery/ui',], function ($, domReady) {
                 if (link.attr('href') !== '#') {
                     link.attr('onclick', 'return false;');
                     link.click(function() {
+                        var url = link.attr('href');
+                        if (url.indexOf('?') > -1) {
+                            url += '&advLayNavAjax=1';
+                        } else {
+                            url += '?advLayNavAjax=1';
+                        }
                         $.ajax({
-                            url: link.attr('href') + "$isLayerAjax=1"
+                            'url': url,
+                            dataType: 'json'
                         }).done(function(data) {
                             history.pushState({}, '', link.attr('href'));
-                            console.log(data);
+                            var productListContent = data[0];
+                            var leftNavContent = data[1];
+
+                            $('#advlaynav_category\\.products\\.list_before')
+                                .nextUntil('#advlaynav_category\\.products\\.list_after')
+                                .remove();
+                            $(productListContent).insertAfter($('#advlaynav_category\\.products\\.list_before'));
+
+                            $('#advlaynav_catalog\\.leftnav_before')
+                                .nextUntil('#advlaynav_catalog\\.leftnav_after')
+                                .remove();
+                            $(leftNavContent).insertAfter($('#advlaynav_catalog\\.leftnav_before'));
+
+                            $(mage.apply);
+                            $('#layered-filter-block').advlaynav();
                         });
                     });
                 }
