@@ -123,7 +123,7 @@ class FilterRendererTest extends \PHPUnit_Framework_TestCase
             ->method('isAdvLayNavRangeSliderAttribute')
             ->with($attributeMock)
             ->willReturn(false);
-        
+
         $result = $this->filterRendererPlugin->aroundRender(
             $this->filterRendererMock,
             $this->closureMock,

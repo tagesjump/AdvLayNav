@@ -61,8 +61,8 @@ class Page
             $productListBlock = $layout->getBlock('category.products.list');
             $leftnavBlock = $layout->getBlock('catalog.leftnav');
             $data = [
-                str_replace(['&advLayNavAjax=1', '&amp;advLayNavAjax=1'], '', trim($productListBlock->toHtml())),
-                str_replace(['&advLayNavAjax=1', '&amp;advLayNavAjax=1'], '', trim($leftnavBlock->toHtml())),
+                trim(str_replace(['&advLayNavAjax=1', '&amp;advLayNavAjax=1'], '', $productListBlock->toHtml())),
+                trim(str_replace(['&advLayNavAjax=1', '&amp;advLayNavAjax=1'], '', $leftnavBlock->toHtml())),
             ];
             $response->appendBody(json_encode($data));
 
