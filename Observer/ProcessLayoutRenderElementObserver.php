@@ -15,6 +15,8 @@ use Magento\Framework\Event\ObserverInterface;
 class ProcessLayoutRenderElementObserver implements ObserverInterface
 {
     /**
+     * Array of all product list & navigation block names.
+     *
      * @var array
      */
     private $blockNames = [

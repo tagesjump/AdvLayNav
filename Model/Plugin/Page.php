@@ -58,14 +58,14 @@ class Page
 
             /** @var Magento\Framework\View\Layout $layout */
             $layout = $subject->getLayout();
-            $productListBlockParameter = urldecode($this->request->getParam('productListBlockName'));
-            $navigationBlockParameter = urldecode($this->request->getParam('navigationBlockName'));
-            $productListBlock = $layout->getBlock($productListBlockParameter);
-            $leftnavBlock = $layout->getBlock($navigationBlockParameter);
+            $prodListBlockParam = urldecode($this->request->getParam('productListBlockName'));
+            $navBlockParam = urldecode($this->request->getParam('navigationBlockName'));
+            $productListBlock = $layout->getBlock($prodListBlockParam);
+            $leftnavBlock = $layout->getBlock($productListBlock);
             $parameters = [
                 '&advLayNavAjax=1',
-                '&productListBlockName='.$productListBlockParameter,
-                '&navigationBlockName='.$navigationBlockParameter,
+                '&productListBlockName='.$prodListBlockParam,
+                '&navigationBlockName='.$productListBlock,
             ];
             $data = [
                 $this->removeUriParameters($productListBlock->toHtml(), $parameters),
