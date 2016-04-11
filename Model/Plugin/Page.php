@@ -84,6 +84,12 @@ class Page
         return $proceed($response);
     }
 
+    /**
+     * Replaces the parameters in the html with an empty string.
+     *
+     * @param string $blockName
+     * @param array  $parameters
+     */
     private function removeUriParameters($html, array $parameters)
     {
         $search = [];

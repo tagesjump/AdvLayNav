@@ -29,7 +29,7 @@ class ProcessLayoutRenderElementObserver implements ObserverInterface
     ];
 
     /**
-     * Surrounds the content of the blocks category.products.list and catalog.leftnav with span elements to find them
+     * Surrounds the content of the product lists & navigation blocks with span elements to find them
      * later in the DOM.
      *
      * @param \Magento\Framework\Event\Observer $observer
@@ -45,6 +45,13 @@ class ProcessLayoutRenderElementObserver implements ObserverInterface
         }
     }
 
+    /**
+     * Surrounds the output of transport with span before and a span after tag.
+     *
+     * @param \Magento\Framework\DataObject $transport
+     * @param string                        $blockType
+     * @param string                        $blockName
+     */
     private function addBeforeAndAfterTagToTransport(\Magento\Framework\DataObject $transport, $blockType, $blockName)
     {
         $output = $transport->getData('output');
