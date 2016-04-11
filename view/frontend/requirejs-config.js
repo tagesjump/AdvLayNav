@@ -8,7 +8,8 @@
 var config = {
     map: {
         '*': {
-            advLayNav: 'Part_AdvLayNav/js/advlaynav'
+            advLayNav: 'Part_AdvLayNav/js/advlaynav',
+            advLayNavAjaxCall: 'Part_AdvLayNav/js/ajaxcall'
         }
     }
 };
