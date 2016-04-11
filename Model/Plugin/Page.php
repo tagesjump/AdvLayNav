@@ -61,11 +61,11 @@ class Page
             $prodListBlockParam = urldecode($this->request->getParam('productListBlockName'));
             $navBlockParam = urldecode($this->request->getParam('navigationBlockName'));
             $productListBlock = $layout->getBlock($prodListBlockParam);
-            $leftnavBlock = $layout->getBlock($productListBlock);
+            $leftnavBlock = $layout->getBlock($navBlockParam);
             $parameters = [
                 '&advLayNavAjax=1',
                 '&productListBlockName='.$prodListBlockParam,
-                '&navigationBlockName='.$productListBlock,
+                '&navigationBlockName='.$navBlockParam,
             ];
             $data = [
                 $this->removeUriParameters($productListBlock->toHtml(), $parameters),
