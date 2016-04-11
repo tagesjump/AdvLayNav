@@ -58,11 +58,18 @@ class Page
 
             /** @var Magento\Framework\View\Layout $layout */
             $layout = $subject->getLayout();
-            $productListBlock = $layout->getBlock(urldecode($this->request->getParam('productListBlockName')));
-            $leftnavBlock = $layout->getBlock(urldecode($this->request->getParam('navigationBlockName')));
+            $productListBlockParameter = urldecode($this->request->getParam('productListBlockName'));
+            $navigationBlockParameter = urldecode($this->request->getParam('navigationBlockName'));
+            $productListBlock = $layout->getBlock($productListBlockParameter);
+            $leftnavBlock = $layout->getBlock($navigationBlockParameter);
+            $parameters = [
+                '&advLayNavAjax=1',
+                '&productListBlockName='.$productListBlockParameter,
+                '&navigationBlockName='.$navigationBlockParameter,
+            ];
             $data = [
-                trim(str_replace(['&advLayNavAjax=1', '&amp;advLayNavAjax=1'], '', $productListBlock->toHtml())),
-                trim(str_replace(['&advLayNavAjax=1', '&amp;advLayNavAjax=1'], '', $leftnavBlock->toHtml())),
+                $this->removeUriParameters($productListBlock->toHtml(), $parameters),
+                $this->removeUriParameters($leftnavBlock->toHtml(), $parameters),
             ];
             $response->appendBody(json_encode($data));
 
@@ -75,5 +82,16 @@ class Page
         }
 
         return $proceed($response);
+    }
+
+    private function removeUriParameters($html, array $parameters)
+    {
+        $search = [];
+        foreach ($parameters as $parameter) {
+            $search[] = $parameter;
+            $search[] = htmlspecialchars($parameter);
+        }
+
+        return trim(str_replace($search, '', $html));
     }
 }

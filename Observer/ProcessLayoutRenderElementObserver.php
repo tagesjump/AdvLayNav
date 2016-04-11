@@ -49,7 +49,8 @@ class ProcessLayoutRenderElementObserver implements ObserverInterface
     {
         $output = $transport->getData('output');
         $output = sprintf(
-            '<span id="advlaynav_%1$s_before" data-block-name="%2$s"></span>%3$s<span id="advlaynav_%1$s_after"></span>',
+            '<span id="advlaynav_%1$s_before" data-block-name="%2$s"></span>%3$s<span id="advlaynav_%1$s_after">'
+                .'</span>',
             $blockType,
             urlencode($blockName),
             $output
