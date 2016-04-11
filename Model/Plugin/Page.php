@@ -58,8 +58,8 @@ class Page
 
             /** @var Magento\Framework\View\Layout $layout */
             $layout = $subject->getLayout();
-            $productListBlock = $layout->getBlock('category.products.list');
-            $leftnavBlock = $layout->getBlock('catalog.leftnav');
+            $productListBlock = $layout->getBlock(urldecode($this->request->getParam('productListBlockName')));
+            $leftnavBlock = $layout->getBlock(urldecode($this->request->getParam('navigationBlockName')));
             $data = [
                 trim(str_replace(['&advLayNavAjax=1', '&amp;advLayNavAjax=1'], '', $productListBlock->toHtml())),
                 trim(str_replace(['&advLayNavAjax=1', '&amp;advLayNavAjax=1'], '', $leftnavBlock->toHtml())),

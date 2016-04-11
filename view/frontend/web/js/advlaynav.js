@@ -15,11 +15,15 @@ define(['jquery', 'domReady', 'mage/apply/main', 'jquery/ui'], function ($, domR
                 if (link.attr('href') !== '#') {
                     link.attr('onclick', 'return false;');
                     link.click(function() {
+                        var productListBlockName = $('#advlaynav_product_list_before').attr('data-block-name');
+                        var navigationBlockName = $('#advlaynav_navigation_before').attr('data-block-name');
+                        var blockNameParameters = '&productListBlockName=' + productListBlockName +
+                            '&navigationBlockName=' + navigationBlockName;
                         var url = link.attr('href');
                         if (url.indexOf('?') > -1) {
-                            url += '&advLayNavAjax=1';
+                            url += '&advLayNavAjax=1'+blockNameParameters;
                         } else {
-                            url += '?advLayNavAjax=1';
+                            url += '?advLayNavAjax=1'+blockNameParameters;
                         }
                         $.ajax({
                             'url': url,
@@ -29,15 +33,15 @@ define(['jquery', 'domReady', 'mage/apply/main', 'jquery/ui'], function ($, domR
                             var productListContent = data[0];
                             var leftNavContent = data[1];
 
-                            $('#advlaynav_category\\.products\\.list_before')
-                                .nextUntil('#advlaynav_category\\.products\\.list_after')
+                            $('#advlaynav_product_list_before')
+                                .nextUntil('#advlaynav_product_list_after')
                                 .remove();
-                            $(productListContent).insertAfter($('#advlaynav_category\\.products\\.list_before'));
+                            $(productListContent).insertAfter($('#advlaynav_product_list_before'));
 
-                            $('#advlaynav_catalog\\.leftnav_before')
-                                .nextUntil('#advlaynav_catalog\\.leftnav_after')
+                            $('#advlaynav_navigation_before')
+                                .nextUntil('#advlaynav_navigation_after')
                                 .remove();
-                            $(leftNavContent).insertAfter($('#advlaynav_catalog\\.leftnav_before'));
+                            $(leftNavContent).insertAfter($('#advlaynav_navigation_before'));
 
                             $(mage.apply);
                             $('#layered-filter-block').advlaynav();

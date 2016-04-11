@@ -15,6 +15,20 @@ use Magento\Framework\Event\ObserverInterface;
 class ProcessLayoutRenderElementObserver implements ObserverInterface
 {
     /**
+     * @var array
+     */
+    private $blockNames = [
+        'product_list' => [
+            'category.products.list',
+            'search.result',
+        ],
+        'navigation' => [
+            'catalog.leftnav',
+            'catalogsearch.leftnav',
+        ],
+    ];
+
+    /**
      * Surrounds the content of the blocks category.products.list and catalog.leftnav with span elements to find them
      * later in the DOM.
      *
@@ -23,16 +37,23 @@ class ProcessLayoutRenderElementObserver implements ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $name = $observer->getElementName();
-        if ($name === 'category.products.list' || $name === 'catalog.leftnav') {
-            /** @var \Magento\Framework\DataObject $transport */
-            $transport = $observer->getTransport();
-            $output = $transport->getData('output');
-            $output = sprintf(
-                '<span id="advlaynav_%1$s_before"></span>%2$s<span id="advlaynav_%1$s_after"></span>',
-                $name,
-                $output
-            );
-            $transport->setData('output', $output);
+        foreach ($this->blockNames as $blockType => $blockNames) {
+            if (in_array($name, $blockNames)) {
+                $this->addBeforeAndAfterTagToTransport($observer->getTransport(), $blockType, $name);
+                break;
+            }
         }
+    }
+
+    private function addBeforeAndAfterTagToTransport(\Magento\Framework\DataObject $transport, $blockType, $blockName)
+    {
+        $output = $transport->getData('output');
+        $output = sprintf(
+            '<span id="advlaynav_%1$s_before" data-block-name="%2$s"></span>%3$s<span id="advlaynav_%1$s_after"></span>',
+            $blockType,
+            urlencode($blockName),
+            $output
+        );
+        $transport->setData('output', $output);
     }
 }
