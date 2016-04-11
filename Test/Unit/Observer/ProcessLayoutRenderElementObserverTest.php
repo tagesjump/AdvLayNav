@@ -79,14 +79,14 @@ class ProcessLayoutRenderElementObserverTest extends \PHPUnit_Framework_TestCase
             [
                 'category.products.list',
                 1,
-                '<span id="advlaynav_category.products.list_before"></span>someHtml<span id="advlaynav_category.product'
-                    . 's.list_after"></span>',
+                '<span id="advlaynav_product_list_before" data-block-name="category.products.list"></span>someHtml<span'
+                    .' id="advlaynav_product_list_after"></span>',
             ],
             [
                 'catalog.leftnav',
                 1,
-                '<span id="advlaynav_catalog.leftnav_before"></span>someHtml<span id="advlaynav_catalog.leftnav_after">'
-                    . '</span>',
+                '<span id="advlaynav_navigation_before" data-block-name="catalog.leftnav"></span>someHtml<span id="advl'
+                    .'aynav_navigation_after"></span>',
             ],
             [
                 'some.blockname',

@@ -101,10 +101,13 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testAroundRenderResultTrue()
     {
         $this->requestMock
-            ->expects($this->once())
+            ->expects($this->exactly(3))
             ->method('getParam')
-            ->with('advLayNavAjax')
-            ->willReturn(1);
+            ->will($this->returnValueMap([
+                ['advLayNavAjax', null, '1'],
+                ['productListBlockName', null, 'category.products.list'],
+                ['navigationBlockName', null, 'catalog.leftnav'],
+            ]));
         $layoutMock = $this->getMock(
             '\Magento\Framework\View\Layout',
             ['getBlock'],
@@ -139,7 +142,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
             ->method('getBlock')
             ->will($this->returnValueMap([
                 ['category.products.list', $productListBlockMock],
-                ['catalog.leftnav', $leftnavBlockMock]
+                ['catalog.leftnav', $leftnavBlockMock],
             ]));
         $this->pageMock->expects($this->once())->method('getLayout')->willReturn($layoutMock);
         $this->pageMock
