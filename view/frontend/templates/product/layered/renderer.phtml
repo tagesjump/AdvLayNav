@@ -15,7 +15,7 @@
 </p>
 <div id="slider-range"></div>
 <script>
-    require(["jquery", "jquery/ui"], function ($) {
+    require(['jquery', 'advLayNavAjaxCall', 'jquery/ui'], function ($, advLayNavAjaxCall) {
         $( "#slider-range" ).slider({
             range: true,
             min: <?php echo $block->getMinValue() ?>,
@@ -25,8 +25,9 @@
                 $( "#amount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
             },
             change: function( event, ui ) {
-                url = "<?php echo $block->buildUrl() ?>";
-                window.location = url.replace("option_id_placeholder", ui.values[ 0 ] + "-" + ui.values[ 1 ]);
+                var ajaxUrl = "<?php echo $block->buildUrl() ?>";
+                ajaxUrl = ajaxUrl.replace("option_id_placeholder", ui.values[ 0 ] + "-" + ui.values[ 1 ]);
+                advLayNavAjaxCall(ajaxUrl);
             }
         });
         $( "#amount" ).val( $( "#slider-range" ).slider( "values", 0 ) +
