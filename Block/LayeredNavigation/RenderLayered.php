@@ -110,14 +110,24 @@ class RenderLayered extends Template
     }
 
     /**
-     * Builds a url for the current attribute and returns it.
+     * Builds a url for the current attribute with option_id_placeholder as placeholder.
      *
      * @return string
      */
-    public function buildUrl()
+    public function getOptionsPlaceholderUrl()
     {
         $query = [$this->eavAttribute->getAttributeCode() => 'option_id_placeholder'];
         return $this->_urlBuilder->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true, '_query' => $query]);
+    }
+
+    /**
+     * Builds url without the current attribute.
+     *
+     * @return string
+     */
+    public function getRemoveUrl()
+    {
+        return $this->filter->getRemoveUrl();
     }
 
     /**

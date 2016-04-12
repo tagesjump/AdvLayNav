@@ -16,17 +16,24 @@
 <div id="slider-range"></div>
 <script>
     require(['jquery', 'advLayNavAjaxCall', 'jquery/ui'], function ($, advLayNavAjaxCall) {
+        var minValue = <?php echo $block->getMinValue() ?>;
+        var maxValue = <?php echo $block->getMaxValue() ?>;
         $( "#slider-range" ).slider({
             range: true,
-            min: <?php echo $block->getMinValue() ?>,
-            max: <?php echo $block->getMaxValue() ?>,
+            min: minValue,
+            max: maxValue,
             values: [ <?php echo $block->getMinValue() ?>, <?php echo $block->getMaxValue() ?> ],
             slide: function( event, ui ) {
                 $( "#amount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
             },
             change: function( event, ui ) {
-                var ajaxUrl = "<?php echo $block->buildUrl() ?>";
-                ajaxUrl = ajaxUrl.replace("option_id_placeholder", ui.values[ 0 ] + "-" + ui.values[ 1 ]);
+                var ajaxUrl;
+                if (ui.values[ 0 ] === minValue && ui.values[ 1 ] === maxValue) {
+                    ajaxUrl = "<?php echo $block->getRemoveUrl() ?>";
+                } else {
+                    ajaxUrl = "<?php echo $block->getOptionsPlaceholderUrl() ?>";
+                    ajaxUrl = ajaxUrl.replace("option_id_placeholder", ui.values[ 0 ] + "-" + ui.values[ 1 ]);
+                }
                 advLayNavAjaxCall(ajaxUrl);
             }
         });

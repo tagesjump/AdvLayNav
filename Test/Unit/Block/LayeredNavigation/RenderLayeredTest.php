@@ -93,7 +93,13 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
                 ]
             )
         );
-        $this->layerMock = $this->getMock('\Magento\Catalog\Model\Layer', ['getProductCollection'], [], '', false);
+        $this->layerMock = $this->getMock(
+            '\Magento\Catalog\Model\Layer',
+            ['getProductCollection', 'getRemoveUrl'],
+            [],
+            '',
+            false
+        );
         $this->layerMock->expects($this->any())->method('getProductCollection')->willReturn($this->prodCollMock);
         $this->filterMock = $this->getMock(
             'Magento\Catalog\Model\Layer\Filter\AbstractFilter',
@@ -139,7 +145,7 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(46, $this->block->getMaxValue());
     }
 
-    public function testBuildUrl()
+    public function testGetOptionsPlaceholderUrl()
     {
         $args = [
             '_current' => true,
@@ -152,6 +158,14 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
             ->method('getUrl')
             ->with('*/*/*', $args)
             ->willReturn('http://example.com/');
-        $this->assertSame('http://example.com/', $this->block->buildUrl());
+        $this->assertSame('http://example.com/', $this->block->getOptionsPlaceholderUrl());
+    }
+
+    public function testGetRemoveUrl()
+    {
+        $this->filterMock->expects($this->once())
+            ->method('getRemoveUrl')
+            ->willReturn('https://remove-that-shit.dev/');
+        $this->assertSame('https://remove-that-shit.dev/', $this->block->getRemoveUrl());
     }
 }
