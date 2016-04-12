@@ -187,13 +187,15 @@ class RenderLayered extends Template
             if (count($filter) != 2) {
                 $this->leftValue = $this->getMinValue();
                 $this->rightValue = $this->getMaxValue();
-            } elseif (!$filter[1]) {
+                return;
+            }
+            if (!$filter[1]) {
                 $this->leftValue = $filter[0];
                 $this->rightValue = $this->getMaxValue();
-            } else {
-                $this->leftValue = $filter[0];
-                $this->rightValue = $filter[1];
+                return;
             }
+            $this->leftValue = $filter[0];
+            $this->rightValue = $filter[1];
         }
     }
 }
