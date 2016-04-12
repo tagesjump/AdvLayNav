@@ -26,17 +26,17 @@ cache:
         - $HOME/.composer/cache
 
 install:
-    - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
-    - composer install --prefer-dist
-    - sh -c "if [ '$TEST_SUITE' = 'static' ]; then npm install -g grunt-cli; fi"
+    - sh -c "if [ '$TEST_SUITE' = 'unit' ]; then echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json; fi"
+    - sh -c "if [ '$TEST_SUITE' = 'unit' ]; then composer install --prefer-dist; fi"
+    - sh -c "if [ '$TEST_SUITE' = 'static' ]; then npm install; fi"
 
 script:
-    - php vendor/bin/phpdoc run -d Block,Helper,Model,Observer -t build/doc
-    - php vendor/bin/phpcs
-    - php vendor/bin/phpmd Block/,Helper/,Model/,Observer/,Test/ text cleancode,codesize,controversial,design,naming,unusedcode
-    - php vendor/bin/phpcpd Block/ Helper/ Model/ Observer/ Test/
-    - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-    - sh -c "if [ '$TEST_SUITE' = 'static' ]; then grunt ci; fi"
+    - sh -c "if [ '$TEST_SUITE' = 'unit' ]; then php vendor/bin/phpdoc run -d Block,Helper,Model,Observer -t build/doc; fi"
+    - sh -c "if [ '$TEST_SUITE' = 'unit' ]; then php vendor/bin/phpcs; fi"
+    - sh -c "if [ '$TEST_SUITE' = 'unit' ]; then php vendor/bin/phpmd Block/,Helper/,Model/,Observer/,Test/ text cleancode,codesize,controversial,design,naming,unusedcode; fi"
+    - sh -c "if [ '$TEST_SUITE' = 'unit' ]; then php vendor/bin/phpcpd Block/ Helper/ Model/ Observer/ Test/; fi"
+    - sh -c "if [ '$TEST_SUITE' = 'unit' ]; then php vendor/bin/phpunit --coverage-clover build/logs/clover.xml; fi"
+    - sh -c "if [ '$TEST_SUITE' = 'static' ]; then ./node_modules/.bin/grunt ci; fi"
 
 after_script:
-    - php vendor/bin/coveralls
+    - sh -c "if [ '$TEST_SUITE' = 'unit' ]; then php vendor/bin/coveralls; fi"
