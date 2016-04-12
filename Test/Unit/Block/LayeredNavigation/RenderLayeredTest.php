@@ -25,22 +25,17 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $eavAttributeMock;
+    private $sessionMock;
 
     /**
-     * @var string
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $attributeCode = 'super_mega_attribute';
+    private $storeMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $prodCollMock;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    private $layerMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -63,80 +58,77 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
             false
         );
         $this->contextMock->expects($this->any())->method('getUrlBuilder')->willReturn($this->urlBuilderMock);
-        $this->eavAttributeMock = $this->getMock(
-            '\Magento\Eav\Model\Entity\Attribute',
-            ['getAttributeCode'],
+        $this->sessionMock = $this->getMock(
+            '\Magento\Framework\Session\SessionManager',
+            ['getCustomerGroupId'],
             [],
             '',
             false
         );
-        $this->eavAttributeMock->expects($this->any())->method('getAttributeCode')->willReturn($this->attributeCode);
-        $productMock1 = $this->getMock('\Magento\Catalog\Model\Product', ['getData'], [], '', false);
-        $productMock1->expects($this->any())->method('getData')->with($this->attributeCode)->willReturn(45);
-        $productMock2 = $this->getMock('\Magento\Catalog\Model\Product', ['getData'], [], '', false);
-        $productMock2->expects($this->any())->method('getData')->with($this->attributeCode)->willReturn(12);
-        $productMock3 = $this->getMock('\Magento\Catalog\Model\Product', ['getData'], [], '', false);
-        $productMock3->expects($this->any())->method('getData')->with($this->attributeCode)->willReturn(-5);
+        $this->contextMock->expects($this->any())->method('getSession')->willReturn($this->sessionMock);
+        $storeManagerMock = $this->getMock(
+            '\Magento\Store\Model\StoreManager',
+            ['getStore'],
+            [],
+            '',
+            false
+        );
+        $this->storeMock = $this->getMock(
+            '\Magento\Store\Model\Store',
+            ['getWebsiteId'],
+            [],
+            '',
+            false
+        );
+        $storeManagerMock->expects($this->any())->method('getStore')->willReturn($this->storeMock);
+        $this->contextMock->expects($this->any())->method('getStoreManager')->willReturn($storeManagerMock);
         $this->prodCollMock = $this->getMock(
             '\Magento\Catalog\Model\ResourceModel\Product\Collection',
-            ['getIterator'],
+            ['addPriceData', 'getMinPrice', 'getMaxPrice'],
             [],
             '',
             false
         );
-        $this->prodCollMock->expects($this->any())->method('getIterator')->willReturn(
-            new \ArrayIterator(
-                [
-                    $productMock1,
-                    $productMock2,
-                    $productMock3,
-                ]
-            )
-        );
-        $this->layerMock = $this->getMock('\Magento\Catalog\Model\Layer', ['getProductCollection'], [], '', false);
-        $this->layerMock->expects($this->any())->method('getProductCollection')->willReturn($this->prodCollMock);
+        $categoryMock = $this->getMock('\Magento\Catalog\Model\Category', ['getProductCollection'], [], '', false);
+        $categoryMock->expects($this->any())->method('getProductCollection')->willReturn($this->prodCollMock);
+        $layerMock = $this->getMock('\Magento\Catalog\Model\Layer', ['getCurrentCategory'], [], '', false);
+        $layerMock->expects($this->any())->method('getCurrentCategory')->willReturn($categoryMock);
         $this->filterMock = $this->getMock(
             'Magento\Catalog\Model\Layer\Filter\AbstractFilter',
-            ['getLayer', 'getAttributeModel', 'getRemoveUrl'],
+            ['getLayer', 'getResetValue', 'getRequestVar'],
             [],
             '',
             false
         );
-        $this->filterMock->expects($this->any())->method('getLayer')->willReturn($this->layerMock);
-        $this->filterMock->expects($this->any())->method('getAttributeModel')->willReturn($this->eavAttributeMock);
+        $this->filterMock->expects($this->any())->method('getLayer')->willReturn($layerMock);
         $this->block = $this->getMock(
             '\Part\AdvLayNav\Block\LayeredNavigation\RenderLayered',
-            ['filter', 'eavAttribute'],
+            ['filter'],
             [
                 $this->contextMock,
-                $this->eavAttributeMock,
                 [],
             ],
             '',
             true
         );
+        $this->block->setAdvLayNavFilter($this->filterMock);
     }
 
     public function testSetAdvLayNavFilter()
     {
-        $this->block->method('filter')->willReturn($this->filterMock);
-        $eavAttribute = $this->getMock('\Magento\Catalog\Model\ResourceModel\Eav\Attribute', null, [], '', false);
-        $this->filterMock->expects($this->once())->method('getAttributeModel')->willReturn($eavAttribute);
-        $this->block->method('eavAttribute')->willReturn($eavAttribute);
         $result = $this->block->setAdvLayNavFilter($this->filterMock);
         $this->assertEquals($result, $this->block);
     }
 
-    public function testGetMinValue()
+    public function testGetMinMaxValue()
     {
-        $this->block->setAdvLayNavFilter($this->filterMock);
-        $this->assertSame(-5, $this->block->getMinValue());
-    }
-
-    public function testGetMaxValue()
-    {
-        $this->block->setAdvLayNavFilter($this->filterMock);
-        $this->assertSame(46, $this->block->getMaxValue());
+        $this->sessionMock->expects($this->once())->method('getCustomerGroupId')->willReturn(5);
+        $this->storeMock->expects($this->once())->method('getWebsiteId')->willReturn(3);
+        $this->prodCollMock->expects($this->once())->method('addPriceData')->with(5, 3);
+        $this->prodCollMock->expects($this->once())->method('getMinPrice')->willReturn(6);
+        $this->prodCollMock->expects($this->once())->method('getMaxPrice')->willReturn(15);
+        $this->assertSame(6, $this->block->getMinValue());
+        $this->assertSame(15, $this->block->getMaxValue());
     }
 
     public function testGetOptionsPlaceholderUrl()
@@ -145,9 +137,10 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
             '_current' => true,
             '_use_rewrite' => true,
             '_query' => [
-                $this->attributeCode => 'option_id_placeholder',
+                'price' => 'option_id_placeholder',
             ],
         ];
+        $this->filterMock->expects($this->once())->method('getRequestVar')->willReturn('price');
         $this->urlBuilderMock->expects($this->once())
             ->method('getUrl')
             ->with('*/*/*', $args)
@@ -157,10 +150,19 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRemoveUrl()
     {
-        $this->filterMock->expects($this->once())
-            ->method('getRemoveUrl')
-            ->willReturn('https://remove-that-shit.dev/');
-        $this->block->setAdvLayNavFilter($this->filterMock);
-        $this->assertSame('https://remove-that-shit.dev/', $this->block->getRemoveUrl());
+        $args = [
+            '_current' => true,
+            '_use_rewrite' => true,
+            '_query' => [
+                'price' => '50-102',
+            ],
+        ];
+        $this->filterMock->expects($this->once())->method('getRequestVar')->willReturn('price');
+        $this->filterMock->expects($this->once())->method('getResetValue')->willReturn('50-102');
+        $this->urlBuilderMock->expects($this->once())
+            ->method('getUrl')
+            ->with('*/*/*', $args)
+            ->willReturn('http://example.com/');
+        $this->assertSame('http://example.com/', $this->block->getRemoveUrl());
     }
 }

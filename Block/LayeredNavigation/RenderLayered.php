@@ -7,7 +7,6 @@
  */
 namespace Part\AdvLayNav\Block\LayeredNavigation;
 
-use Magento\Eav\Model\Entity\Attribute;
 use Magento\Framework\View\Element\Template;
 
 /**
@@ -26,20 +25,11 @@ class RenderLayered extends Template
     // @codingStandardsIgnoreEnd
 
     /**
-     * The attribute from the filter of the RenderLayered.
-     *
-     * @var \Magento\Eav\Model\Attribute
-     */
-    private $eavAttribute;
-
-    /**
      * The filter of the RenderLayered.
      *
      * @var \Magento\Catalog\Model\Layer\Filter\AbstractFilter
      */
     private $filter;
-
-    private $storeManager;
 
     /**
      * The maximum value of the attribute.
@@ -56,18 +46,29 @@ class RenderLayered extends Template
     private $minValue;
 
     /**
+     * The left value of the attribute slider.
+     *
+     * @var flaot
+     */
+    private $leftValue;
+
+    /**
+     * The right value of the attribute slider.
+     *
+     * @var flaot
+     */
+    private $rightValue;
+
+    /**
      * Creates an RenderLayered object.
      *
      * @param Template\Context $context
-     * @param Attribute $eavAttribute
      * @param array $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        Attribute $eavAttribute,
         array $data = []
     ) {
-        $this->eavAttribute = $eavAttribute;
         parent::__construct($context, $data);
     }
 
@@ -81,7 +82,6 @@ class RenderLayered extends Template
     public function setAdvLayNavFilter(\Magento\Catalog\Model\Layer\Filter\AbstractFilter $filter)
     {
         $this->filter = $filter;
-        $this->eavAttribute = $filter->getAttributeModel();
 
         return $this;
     }
@@ -110,24 +110,28 @@ class RenderLayered extends Template
         return $this->maxValue;
     }
 
+    /**
+     * Returns the left value of the slider.
+     *
+     * @return float
+     */
     public function getLeftValue()
     {
-        $filter = $this->_request->getParam($this->filter->getRequestVar());
-        $filter = explode('-', $filter);
-        if (count($filter) != 2) {
-            return $this->getMinValue();
-        }
-        return $filter[0];
+        $this->initLeftRightValue();
+
+        return $this->leftValue;
     }
 
+    /**
+     * Returns the right value of the slider.
+     *
+     * @return flaot
+     */
     public function getRightValue()
     {
-        $filter = $this->_request->getParam($this->filter->getRequestVar());
-        $filter = explode('-', $filter);
-        if (count($filter) != 2 || !$filter[1]) {
-            return $this->getMaxValue();
-        }
-        return $filter[1];
+        $this->initLeftRightValue();
+
+        return $this->rightValue;
     }
 
     /**
@@ -137,7 +141,7 @@ class RenderLayered extends Template
      */
     public function getOptionsPlaceholderUrl()
     {
-        $query = [$this->eavAttribute->getAttributeCode() => 'option_id_placeholder'];
+        $query = [$this->filter->getRequestVar() => 'option_id_placeholder'];
         return $this->_urlBuilder->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true, '_query' => $query]);
     }
 
@@ -167,6 +171,29 @@ class RenderLayered extends Template
             );
             $this->minValue = $productCollection->getMinPrice();
             $this->maxValue = $productCollection->getMaxPrice();
+        }
+    }
+
+    /**
+     * Initializes the left & right value of the attribute filter.
+     *
+     * @return void
+     */
+    private function initLeftRightValue()
+    {
+        if (is_null($this->leftValue) || is_null($this->rightValue)) {
+            $filter = $this->_request->getParam($this->filter->getRequestVar());
+            $filter = explode('-', $filter);
+            if (count($filter) != 2) {
+                $this->leftValue = $this->getMinValue();
+                $this->rightValue = $this->getMaxValue();
+            } elseif (!$filter[1]) {
+                $this->leftValue = $filter[0];
+                $this->rightValue = $this->getMaxValue();
+            } else {
+                $this->leftValue = $filter[0];
+                $this->rightValue = $filter[1];
+            }
         }
     }
 }
