@@ -22,7 +22,7 @@
             range: true,
             min: minValue,
             max: maxValue,
-            values: [ <?php echo $block->getMinValue() ?>, <?php echo $block->getMaxValue() ?> ],
+            values: [ <?php echo $block->getLeftValue() ?>, <?php echo $block->getRightValue() ?> ],
             slide: function( event, ui ) {
                 $( "#amount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
             },

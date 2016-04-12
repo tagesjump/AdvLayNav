@@ -39,6 +39,8 @@ class RenderLayered extends Template
      */
     private $filter;
 
+    private $storeManager;
+
     /**
      * The maximum value of the attribute.
      *
@@ -66,7 +68,6 @@ class RenderLayered extends Template
         array $data = []
     ) {
         $this->eavAttribute = $eavAttribute;
-
         parent::__construct($context, $data);
     }
 
@@ -109,6 +110,26 @@ class RenderLayered extends Template
         return $this->maxValue;
     }
 
+    public function getLeftValue()
+    {
+        $filter = $this->_request->getParam($this->filter->getRequestVar());
+        $filter = explode('-', $filter);
+        if (count($filter) != 2) {
+            return $this->getMinValue();
+        }
+        return $filter[0];
+    }
+
+    public function getRightValue()
+    {
+        $filter = $this->_request->getParam($this->filter->getRequestVar());
+        $filter = explode('-', $filter);
+        if (count($filter) != 2) {
+            return $this->getMaxValue();
+        }
+        return $filter[1];
+    }
+
     /**
      * Builds a url for the current attribute with option_id_placeholder as placeholder.
      *
@@ -127,7 +148,8 @@ class RenderLayered extends Template
      */
     public function getRemoveUrl()
     {
-        return $this->filter->getRemoveUrl();
+        $query = [$this->filter->getRequestVar() => $this->filter->getResetValue()];
+        return $this->_urlBuilder->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true, '_query' => $query]);
     }
 
     /**
@@ -138,17 +160,13 @@ class RenderLayered extends Template
     private function initMinMaxValues()
     {
         if (is_null($this->minValue) || is_null($this->maxValue)) {
-            $productCollection = $this->filter->getLayer()->getProductCollection();
-            foreach ($productCollection as $product) {
-                $prodAttributeValue = $product->getData($this->eavAttribute->getAttributeCode());
-                if (is_null($this->minValue) || $this->minValue > $prodAttributeValue) {
-                    $this->minValue = $prodAttributeValue;
-                }
-                if (is_null($this->maxValue) || $this->maxValue < $prodAttributeValue) {
-                    $this->maxValue = $prodAttributeValue;
-                }
-            }
-            $this->maxValue++;
+            $productCollection = $this->filter->getLayer()->getCurrentCategory()->getProductCollection();
+            $productCollection->addPriceData(
+                $this->_session->getCustomerGroupId(),
+                $this->_storeManager->getStore()->getWebsiteId()
+            );
+            $this->minValue = $productCollection->getMinPrice();
+            $this->maxValue = $productCollection->getMaxPrice();
         }
     }
 }
