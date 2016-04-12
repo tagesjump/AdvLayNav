@@ -124,7 +124,7 @@ class RenderLayered extends Template
     {
         $filter = $this->_request->getParam($this->filter->getRequestVar());
         $filter = explode('-', $filter);
-        if (count($filter) != 2) {
+        if (count($filter) != 2 || !$filter[1]) {
             return $this->getMaxValue();
         }
         return $filter[1];

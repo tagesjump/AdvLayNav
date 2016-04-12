@@ -31,8 +31,14 @@
                 if (ui.values[ 0 ] === minValue && ui.values[ 1 ] === maxValue) {
                     ajaxUrl = "<?php echo $block->getRemoveUrl() ?>";
                 } else {
+                    var replace;
+                    if (ui.values[ 1 ] === maxValue) {
+                        replace = ui.values[ 0 ] + "-";
+                    } else {
+                        replace = ui.values[ 0 ] + "-" + ui.values[ 1 ];
+                    }
                     ajaxUrl = "<?php echo $block->getOptionsPlaceholderUrl() ?>";
-                    ajaxUrl = ajaxUrl.replace("option_id_placeholder", ui.values[ 0 ] + "-" + ui.values[ 1 ]);
+                    ajaxUrl = ajaxUrl.replace("option_id_placeholder", replace);
                 }
                 advLayNavAjaxCall(ajaxUrl);
             }
