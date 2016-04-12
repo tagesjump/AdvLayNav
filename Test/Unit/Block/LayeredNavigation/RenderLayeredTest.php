@@ -93,17 +93,11 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
                 ]
             )
         );
-        $this->layerMock = $this->getMock(
-            '\Magento\Catalog\Model\Layer',
-            ['getProductCollection', 'getRemoveUrl'],
-            [],
-            '',
-            false
-        );
+        $this->layerMock = $this->getMock('\Magento\Catalog\Model\Layer', ['getProductCollection'], [], '', false);
         $this->layerMock->expects($this->any())->method('getProductCollection')->willReturn($this->prodCollMock);
         $this->filterMock = $this->getMock(
             'Magento\Catalog\Model\Layer\Filter\AbstractFilter',
-            ['getLayer', 'getAttributeModel'],
+            ['getLayer', 'getAttributeModel', 'getRemoveUrl'],
             [],
             '',
             false
@@ -166,6 +160,7 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
         $this->filterMock->expects($this->once())
             ->method('getRemoveUrl')
             ->willReturn('https://remove-that-shit.dev/');
+        $this->block->setAdvLayNavFilter($this->filterMock);
         $this->assertSame('https://remove-that-shit.dev/', $this->block->getRemoveUrl());
     }
 }
