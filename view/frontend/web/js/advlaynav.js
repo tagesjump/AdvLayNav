@@ -5,23 +5,23 @@
  * file that was distributed with this source code.
  */
 
-define(['jquery', 'advLayNavAjaxCall', 'jquery/ui'], function ($, advLayNavAjaxCall) {
-    'use strict';
+define( [ "jquery", "advLayNavAjaxCall", "jquery/ui" ], function( $, advLayNavAjaxCall ) {
+    "use strict";
 
-    $.widget('part.advlaynav', {
+    $.widget( "part.advlaynav", {
         _create: function() {
-            this.element.find('a').each(function(index) {
+            this.element.find( "a" ).each( function() {
                 var link = $( this );
-                if (link.attr('href') !== '#') {
-                    link.attr('onclick', 'return false;');
-                    var url = link.attr('href');
-                    link.click(function () {
-                        advLayNavAjaxCall(url);
-                    });
+                if ( link.attr( "href" ) !== "#" ) {
+                    link.attr( "onclick", "return false;" );
+                    var url = link.attr( "href" );
+                    link.click( function() {
+                        advLayNavAjaxCall( url );
+                    } );
                 }
-            });
+            } );
         }
-    });
+    } );
 
     return $.part.advlaynav;
-});
+} );
