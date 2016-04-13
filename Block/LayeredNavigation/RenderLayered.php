@@ -60,19 +60,6 @@ class RenderLayered extends Template
     private $rightValue;
 
     /**
-     * Creates an RenderLayered object.
-     *
-     * @param Template\Context $context
-     * @param array $data
-     */
-    public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        array $data = []
-    ) {
-        parent::__construct($context, $data);
-    }
-
-    /**
      * Sets the filter on this RenderLayered object.
      *
      * @param \Magento\Catalog\Model\Layer\Filter\AbstractFilter $filter

@@ -35,6 +35,11 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
+    private $requestMock;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $prodCollMock;
 
     /**
@@ -50,13 +55,7 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->contextMock = $this->getMock('\Magento\Framework\View\Element\Template\Context', [], [], '', false);
-        $this->urlBuilderMock = $this->getMock(
-            '\Magento\Framework\Url',
-            ['getCurrentUrl', 'getRedirectUrl', 'getUrl'],
-            [],
-            '',
-            false
-        );
+        $this->urlBuilderMock = $this->getMock('\Magento\Framework\Url', ['getUrl'], [], '', false);
         $this->contextMock->expects($this->any())->method('getUrlBuilder')->willReturn($this->urlBuilderMock);
         $this->sessionMock = $this->getMock(
             '\Magento\Framework\Session\SessionManager',
@@ -66,22 +65,12 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
             false
         );
         $this->contextMock->expects($this->any())->method('getSession')->willReturn($this->sessionMock);
-        $storeManagerMock = $this->getMock(
-            '\Magento\Store\Model\StoreManager',
-            ['getStore'],
-            [],
-            '',
-            false
-        );
-        $this->storeMock = $this->getMock(
-            '\Magento\Store\Model\Store',
-            ['getWebsiteId'],
-            [],
-            '',
-            false
-        );
+        $storeManagerMock = $this->getMock('\Magento\Store\Model\StoreManager', ['getStore'], [], '', false);
+        $this->storeMock = $this->getMock('\Magento\Store\Model\Store', ['getWebsiteId'], [], '', false);
         $storeManagerMock->expects($this->any())->method('getStore')->willReturn($this->storeMock);
         $this->contextMock->expects($this->any())->method('getStoreManager')->willReturn($storeManagerMock);
+        $this->requestMock = $this->getMock('\Magento\Framework\App\Request\Http', ['getParam'], [], '', false);
+        $this->contextMock->expects($this->any())->method('getRequest')->willReturn($this->requestMock);
         $this->prodCollMock = $this->getMock(
             '\Magento\Catalog\Model\ResourceModel\Product\Collection',
             ['addPriceData', 'getMinPrice', 'getMaxPrice'],
@@ -131,6 +120,19 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(15, $this->block->getMaxValue());
     }
 
+    /**
+     * @dataProvider dataGetLeftRightValue
+     */
+    public function testGetLeftRightValue($param, $minValue, $maxValue, $expectedLeft, $expectedRight)
+    {
+        $this->prodCollMock->expects($this->any())->method('getMinPrice')->willReturn($minValue);
+        $this->prodCollMock->expects($this->any())->method('getMaxPrice')->willReturn($maxValue);
+        $this->filterMock->expects($this->any())->method('getRequestVar')->willReturn('price');
+        $this->requestMock->expects($this->once())->method('getParam')->with('price')->willReturn($param);
+        $this->assertEquals($expectedLeft, $this->block->getLeftValue());
+        $this->assertEquals($expectedRight, $this->block->getRightValue());
+    }
+
     public function testGetOptionsPlaceholderUrl()
     {
         $args = [
@@ -164,5 +166,17 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
             ->with('*/*/*', $args)
             ->willReturn('http://example.com/');
         $this->assertSame('http://example.com/', $this->block->getRemoveUrl());
+    }
+
+    /**
+     * @return array
+     */
+    public function dataGetLeftRightValue()
+    {
+        return [
+            ['', 3, 9, 3, 9],
+            ['45-', 2, 999, 45, 999],
+            ['3-67', 0, 101, 3, 67],
+        ];
     }
 }
