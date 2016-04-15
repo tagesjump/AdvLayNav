@@ -33,7 +33,7 @@ If you discover any security related issues, please email info@part-online.de in
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[ico-license]: https://img.shields.io/github/license/PartBerlin/AdvLayNav.svg?style=flat-square
 [ico-travis]: https://img.shields.io/travis/PartBerlin/AdvLayNav/master.svg?style=flat-square
 [ico-coverall]: https://img.shields.io/coveralls/PartBerlin/AdvLayNav.svg?style=flat-square
 

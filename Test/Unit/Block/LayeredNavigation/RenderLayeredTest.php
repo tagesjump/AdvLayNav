@@ -179,4 +179,11 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
             ['3-67', 0, 101, 3, 67],
         ];
     }
+
+    public function testGetFilterRequestVar()
+    {
+        $this->filterMock->expects($this->once())->method('getRequestVar')->willReturn('price');
+
+        $this->assertSame('price', $this->block->getFilterRequestVar());
+    }
 }
