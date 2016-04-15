@@ -5,7 +5,7 @@
  * file that was distributed with this source code.
  */
 
-define( [ "jquery", "advLayNavAjaxCall", "jquery/ui" ], function( $, advLayNavAjaxCall ) {
+define( [ "jquery", "advlaynav/ajaxcall", "jquery/ui" ], function( $, ajaxCall ) {
     "use strict";
 
     $.widget( "part.advlaynav", {
@@ -16,7 +16,7 @@ define( [ "jquery", "advLayNavAjaxCall", "jquery/ui" ], function( $, advLayNavAj
                     link.attr( "onclick", "return false;" );
                     var url = link.attr( "href" );
                     link.click( function() {
-                        advLayNavAjaxCall( url );
+                        ajaxCall( url );
                     } );
                 }
             } );

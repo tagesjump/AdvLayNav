@@ -10,40 +10,25 @@
 
  /** @var $block \Part\AdvLayNav\Block\LayeredNavigation\RenderLayered */
 ?>
-<p>
-  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-</p>
-<div id="slider-range"></div>
+<?php
+    $sliderId = "slider-range-" . $block->getFilterRequestVar();
+    $amountId = "amount-" .  $block->getFilterRequestVar();
+?>
+<ol class="items">
+    <li class="item" id="<?php echo $amountId ?>"></li>
+</ol>
+<div id="<?php echo $sliderId ?>"></div>
 <script>
-    require(['jquery', 'advLayNavAjaxCall', 'jquery/ui'], function ($, advLayNavAjaxCall) {
-        var minValue = <?php echo $block->getMinValue() ?>;
-        var maxValue = <?php echo $block->getMaxValue() ?>;
-        $( "#slider-range" ).slider({
-            range: true,
-            min: minValue,
-            max: maxValue,
-            values: [ <?php echo $block->getLeftValue() ?>, <?php echo $block->getRightValue() ?> ],
-            slide: function( event, ui ) {
-                $( "#amount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-            },
-            change: function( event, ui ) {
-                var ajaxUrl;
-                if (ui.values[ 0 ] === minValue && ui.values[ 1 ] === maxValue) {
-                    ajaxUrl = "<?php echo $block->getRemoveUrl() ?>";
-                } else {
-                    var replace;
-                    if (ui.values[ 1 ] === maxValue) {
-                        replace = ui.values[ 0 ] + "-";
-                    } else {
-                        replace = ui.values[ 0 ] + "-" + ui.values[ 1 ];
-                    }
-                    ajaxUrl = "<?php echo $block->getOptionsPlaceholderUrl() ?>";
-                    ajaxUrl = ajaxUrl.replace("option_id_placeholder", replace);
-                }
-                advLayNavAjaxCall(ajaxUrl);
-            }
-        });
-        $( "#amount" ).val( $( "#slider-range" ).slider( "values", 0 ) +
-          " - " + $( "#slider-range" ).slider( "values", 1 ) );
+    require(['advlaynav/rangeslider'], function (rangeSlider) {
+        rangeSlider(
+            <?php echo $block->getMinValue() ?>,
+            <?php echo $block->getMaxValue() ?>,
+            <?php echo $block->getLeftValue() ?>,
+            <?php echo $block->getRightValue() ?>,
+            "<?php echo $sliderId ?>",
+            "<?php echo $amountId ?>",
+            "<?php echo $block->getOptionsPlaceholderUrl() ?>",
+            "<?php echo $block->getRemoveUrl() ?>"
+        );
     });
 </script>
