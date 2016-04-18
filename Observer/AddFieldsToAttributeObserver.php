@@ -60,6 +60,7 @@ class AddFieldsToAttributeObserver implements ObserverInterface
                 'values' => [
                     AdvLayNav::INPUT_TYPE_NONE => __('No'),
                     AdvLayNav::INPUT_TYPE_RANGE_SLIDER => __('Range Slider'),
+                    AdvLayNav::INPUT_TYPE_MULTI_SELECT => __('Multiselect'),
                 ],
             ],
             'is_filterable'

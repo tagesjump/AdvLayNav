@@ -8,3 +8,4 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Add Range Slider as option.
 - Render Range Slider filter in frontend with jQuery UI range slider.
 - Ajax layered navigation
+- Add Multiselect as option.

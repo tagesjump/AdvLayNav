@@ -7,6 +7,8 @@
  */
 namespace Part\AdvLayNav\Test\Unit\Observer;
 
+use Part\AdvLayNav\Model\AdvLayNav;
+
 /**
  * Class AddFieldsToAttributeObserverTest
  */
@@ -77,7 +79,22 @@ class AddFieldsToAttributeObserverTest extends \PHPUnit_Framework_TestCase
             ->method('getElement')
             ->with('front_fieldset')
             ->willReturn($element);
-        $element->expects($this->exactly($addFieldCount))->method('addField');
+        $element->expects($this->exactly($addFieldCount))
+            ->method('addField')
+            ->with(
+                AdvLayNav::INPUT_TYPE_KEY,
+                'select',
+                [
+                    'name' => AdvLayNav::INPUT_TYPE_KEY,
+                    'label' => __('Show as AdvLayNav Input'),
+                    'title' => __('Show as AdvLayNav Input'),
+                    'values' => [
+                        AdvLayNav::INPUT_TYPE_NONE => __('No'),
+                        AdvLayNav::INPUT_TYPE_RANGE_SLIDER => __('Range Slider'),
+                        AdvLayNav::INPUT_TYPE_MULTI_SELECT => __('Multiselect'),
+                    ],
+                ]
+            );
 
         $this->observer->execute($this->eventObserverMock);
     }

@@ -17,4 +17,6 @@ class AdvLayNav
     const INPUT_TYPE_NONE = 'none';
 
     const INPUT_TYPE_RANGE_SLIDER = 'range_slider';
+
+    const INPUT_TYPE_MULTI_SELECT = 'multi_select';
 }
