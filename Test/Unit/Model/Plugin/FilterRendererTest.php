@@ -43,6 +43,11 @@ class FilterRendererTest extends \PHPUnit_Framework_TestCase
     private $filterRendererMock;
 
     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $attributeMock;
+
+    /**
      * @var \Part\AdvLayNav\Model\Plugin\FilterRenderer
      */
     private $filterRendererPlugin;
@@ -65,7 +70,7 @@ class FilterRendererTest extends \PHPUnit_Framework_TestCase
         );
         $this->helperMock = $this->getMock(
             '\Part\AdvLayNav\Helper\Data',
-            ['isAdvLayNavRangeSliderAttribute'],
+            ['isAdvLayNavRangeSliderAttribute', 'isAdvLayNavMultiSelectAttribute'],
             [],
             '',
             false
@@ -95,19 +100,49 @@ class FilterRendererTest extends \PHPUnit_Framework_TestCase
                 'advLayNavHelper' => $this->helperMock,
             ]
         );
+        $this->attributeMock = $this->getMock(
+            '\Magento\Catalog\Model\ResourceModel\Eav\Attribute',
+            null,
+            [],
+            '',
+            false
+        );
+        $this->filterMock->expects($this->atLeastOnce())->method('getAttributeModel')->willReturn($this->attributeMock);
+        $this->filterMock->expects($this->once())->method('hasAttributeModel')->willReturn(true);
     }
 
-    public function testAroundRenderTrue()
+    public function testAroundRenderRangeSlider()
     {
-        $attributeMock = $this->getMock('\Magento\Catalog\Model\ResourceModel\Eav\Attribute', null, [], '', false);
-        $this->filterMock->expects($this->atLeastOnce())->method('getAttributeModel')->willReturn($attributeMock);
-        $this->filterMock->expects($this->once())->method('hasAttributeModel')->willReturn(true);
         $this->helperMock
             ->expects($this->once())
             ->method('isAdvLayNavRangeSliderAttribute')
-            ->with($attributeMock)
+            ->with($this->attributeMock)
             ->willReturn(true);
-        $this->layoutMock->expects($this->once())->method('createBlock')->willReturn($this->blockMock);
+        $this->layoutMock->expects($this->once())
+            ->method('createBlock')
+            ->with('Part\AdvLayNav\Block\LayeredNavigation\RangeSlider')
+            ->willReturn($this->blockMock);
+        $this->blockMock->expects($this->once())->method('setAdvLayNavFilter')->will($this->returnSelf());
+
+        $this->filterRendererPlugin->aroundRender($this->filterRendererMock, $this->closureMock, $this->filterMock);
+    }
+
+    public function testAroundRenderMultiSelect()
+    {
+        $this->helperMock
+            ->expects($this->once())
+            ->method('isAdvLayNavRangeSliderAttribute')
+            ->with($this->attributeMock)
+            ->willReturn(false);
+        $this->helperMock
+            ->expects($this->once())
+            ->method('isAdvLayNavMultiSelectAttribute')
+            ->with($this->attributeMock)
+            ->willReturn(true);
+        $this->layoutMock->expects($this->once())
+            ->method('createBlock')
+            ->with('Part\AdvLayNav\Block\LayeredNavigation\MultiSelect')
+            ->willReturn($this->blockMock);
         $this->blockMock->expects($this->once())->method('setAdvLayNavFilter')->will($this->returnSelf());
 
         $this->filterRendererPlugin->aroundRender($this->filterRendererMock, $this->closureMock, $this->filterMock);
@@ -115,13 +150,15 @@ class FilterRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testAroundRenderFalse()
     {
-        $attributeMock = $this->getMock('\Magento\Catalog\Model\ResourceModel\Eav\Attribute', null, [], '', false);
-        $this->filterMock->expects($this->atLeastOnce())->method('getAttributeModel')->willReturn($attributeMock);
-        $this->filterMock->expects($this->once())->method('hasAttributeModel')->willReturn(true);
         $this->helperMock
             ->expects($this->once())
             ->method('isAdvLayNavRangeSliderAttribute')
-            ->with($attributeMock)
+            ->with($this->attributeMock)
+            ->willReturn(false);
+        $this->helperMock
+            ->expects($this->once())
+            ->method('isAdvLayNavMultiSelectAttribute')
+            ->with($this->attributeMock)
             ->willReturn(false);
 
         $result = $this->filterRendererPlugin->aroundRender(
