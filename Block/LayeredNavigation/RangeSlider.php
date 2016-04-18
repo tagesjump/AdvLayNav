@@ -7,13 +7,11 @@
  */
 namespace Part\AdvLayNav\Block\LayeredNavigation;
 
-use Magento\Framework\View\Element\Template;
-
 /**
- * Class RenderLayered
+ * Class RangeSlider
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
-class RenderLayered extends Template
+class RangeSlider extends AbstractRenderLayered
 {
     // @codingStandardsIgnoreStart
     /**
@@ -21,15 +19,8 @@ class RenderLayered extends Template
      *
      * @var string
      */
-    protected $_template = 'Part_AdvLayNav::product/layered/renderer.phtml';
+    protected $_template = 'Part_AdvLayNav::product/layered/rangeslider.phtml';
     // @codingStandardsIgnoreEnd
-
-    /**
-     * The filter of the RenderLayered.
-     *
-     * @var \Magento\Catalog\Model\Layer\Filter\AbstractFilter
-     */
-    private $filter;
 
     /**
      * The maximum value of the attribute.
@@ -58,20 +49,6 @@ class RenderLayered extends Template
      * @var flaot
      */
     private $rightValue;
-
-    /**
-     * Sets the filter on this RenderLayered object.
-     *
-     * @param \Magento\Catalog\Model\Layer\Filter\AbstractFilter $filter
-     * @return $this
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    public function setAdvLayNavFilter(\Magento\Catalog\Model\Layer\Filter\AbstractFilter $filter)
-    {
-        $this->filter = $filter;
-
-        return $this;
-    }
 
     /**
      * Returns the minimum value of the attribute for the current product collection.

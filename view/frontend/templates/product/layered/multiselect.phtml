@@ -1,0 +1,21 @@
+<?php
+/**
+ * Copyright © PART <info@part-online.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+ // @codingStandardsIgnoreFile
+
+ /** @var $block \Part\AdvLayNav\Block\LayeredNavigation\MultiSelect */
+?>
+<ol class="items">
+    <?php foreach ($block->getFilterItems() as $filterItem): ?>
+        <li class="item">
+            <a href="<?php echo $block->escapeUrl($filterItem->getUrl()) ?>">
+                <input type="checkbox"><?php /* @escapeNotVerified */ echo $filterItem->getLabel() ?>
+            </a>
+        </li>
+    <?php endforeach ?>
+</ol>

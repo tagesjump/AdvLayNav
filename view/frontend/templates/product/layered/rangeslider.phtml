@@ -8,7 +8,7 @@
 
  // @codingStandardsIgnoreFile
 
- /** @var $block \Part\AdvLayNav\Block\LayeredNavigation\RenderLayered */
+ /** @var $block \Part\AdvLayNav\Block\LayeredNavigation\RangeSlider */
 ?>
 <?php
     $sliderId = "slider-range-" . $block->getFilterRequestVar();
@@ -19,7 +19,7 @@
 </ol>
 <div id="<?php echo $sliderId ?>"></div>
 <script>
-    require(['advlaynav/rangeslider'], function (rangeSlider) {
+    require( [ "advlaynav/rangeslider" ], function( rangeSlider ) {
         rangeSlider(
             <?php echo $block->getMinValue() ?>,
             <?php echo $block->getMaxValue() ?>,
@@ -30,5 +30,5 @@
             "<?php echo $block->getOptionsPlaceholderUrl() ?>",
             "<?php echo $block->getRemoveUrl() ?>"
         );
-    });
+    } );
 </script>

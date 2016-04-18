@@ -20,11 +20,18 @@ class FilterRenderer
     private $layout;
 
     /**
-     * The class name of the block for AdvLayNav attributes.
+     * The class name of the block for AdvLayNav range slider attributes.
      *
      * @var string
      */
-    private $block = 'Part\AdvLayNav\Block\LayeredNavigation\RenderLayered';
+    private $sliderBlock = 'Part\AdvLayNav\Block\LayeredNavigation\RangeSlider';
+
+    /**
+     * The class name of the block for AdvLayNav multi select attributes.
+     *
+     * @var string
+     */
+    private $multiSelectBlock = 'Part\AdvLayNav\Block\LayeredNavigation\MultiSelect';
 
     /**
      * The AdvLayNav helper.
@@ -66,7 +73,13 @@ class FilterRenderer
         if ($filter->hasAttributeModel()) {
             if ($this->advLayNavHelper->isAdvLayNavRangeSliderAttribute($filter->getAttributeModel())) {
                 return $this->layout
-                    ->createBlock($this->block)
+                    ->createBlock($this->sliderBlock)
+                    ->setAdvLayNavFilter($filter)
+                    ->toHtml();
+            }
+            if ($this->advLayNavHelper->isAdvLayNavMultiSelectAttribute($filter->getAttributeModel())) {
+                return $this->layout
+                    ->createBlock($this->multiSelectBlock)
                     ->setAdvLayNavFilter($filter)
                     ->toHtml();
             }

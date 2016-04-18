@@ -8,11 +8,11 @@ module.exports = function( grunt ) {
                 jshintrc: true
             },
             gruntfile: "Gruntfile.js",
-            src: "view/frontend/web/js/**/*.js"
+            src: "view/**/*.js"
         },
         jscs: {
             gruntfile: "Gruntfile.js",
-            src: "view/frontend/web/js/**/*.js",
+            src: "view/**/*.js",
             options: {
                 config: ".jscsrc"
             }

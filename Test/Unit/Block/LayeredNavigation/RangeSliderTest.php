@@ -8,9 +8,9 @@
 namespace Part\AdvLayNav\Test\Unit\Block\LayeredNavigation;
 
 /**
- * Class RenderLayeredTest
+ * Class RangeSliderTest
  */
-class RenderLayeredTest extends \PHPUnit_Framework_TestCase
+class RangeSliderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -91,7 +91,7 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
         );
         $this->filterMock->expects($this->any())->method('getLayer')->willReturn($layerMock);
         $this->block = $this->getMock(
-            '\Part\AdvLayNav\Block\LayeredNavigation\RenderLayered',
+            '\Part\AdvLayNav\Block\LayeredNavigation\RangeSlider',
             ['filter'],
             [
                 $this->contextMock,
@@ -101,12 +101,6 @@ class RenderLayeredTest extends \PHPUnit_Framework_TestCase
             true
         );
         $this->block->setAdvLayNavFilter($this->filterMock);
-    }
-
-    public function testSetAdvLayNavFilter()
-    {
-        $result = $this->block->setAdvLayNavFilter($this->filterMock);
-        $this->assertEquals($result, $this->block);
     }
 
     public function testGetMinMaxValue()
