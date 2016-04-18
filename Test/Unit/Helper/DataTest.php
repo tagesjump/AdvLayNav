@@ -113,7 +113,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                serialize(['advlaynav_input_type' => 'slider']),
+                serialize(['advlaynav_input_type' => 'range_slider']),
                 1,
                 'range_slider',
                 true,
@@ -128,9 +128,9 @@ class DataTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider dataIsAdvLayNavRangeSliderAttribute
+     * @dataProvider dataIsAdvLayNavRangeSliderAttributeTrue
      */
-    public function testIsAdvLayNavRangeSliderAttribute($type, $boolResult)
+    public function testIsAdvLayNavRangeSliderAttributeTrue($type, $boolResult)
     {
         $this->attributeMock->method('hasData')->with('advlaynav_input_type')->willReturn(true);
         $this->attributeMock
@@ -149,11 +149,90 @@ class DataTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function dataIsAdvLayNavRangeSliderAttribute()
+    public function dataIsAdvLayNavRangeSliderAttributeTrue()
     {
         return [
             [
                 'range_slider',
+                true,
+            ],
+            [
+                'some_other_type',
+                false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataIsAdvLayNavMultiSelectAttributeFalse
+     */
+    public function testIsAdvLayNavMultiSelectAttributeFalse($data, $setDataCount, $type, $boolResult)
+    {
+        $this->attributeMock->method('hasData')->with('advlaynav_input_type')->willReturn(false);
+        $this->attributeMock->expects($this->exactly(2))->method('getData')->withConsecutive(
+            ['additional_data'],
+            ['advlaynav_input_type']
+        )->willReturnOnConsecutiveCalls($data, $type);
+        $this->attributeMock
+            ->expects($this->exactly($setDataCount))
+            ->method('setData');
+
+        $result = $this->advLayNavHelper->isAdvLayNavMultiSelectAttribute($this->attributeMock);
+        if ($boolResult) {
+            $this->assertTrue($result);
+            return;
+        }
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @return array
+     */
+    public function dataIsAdvLayNavMultiSelectAttributeFalse()
+    {
+        return [
+            [
+                serialize(['advlaynav_input_type' => 'multi_select']),
+                1,
+                'multi_select',
+                true,
+            ],
+            [
+                null,
+                0,
+                'some_other_type',
+                false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataIsAdvLayNavMultiSelectAttributeTrue
+     */
+    public function testIsAdvLayNavMultiSelectAttributeTrue($type, $boolResult)
+    {
+        $this->attributeMock->method('hasData')->with('advlaynav_input_type')->willReturn(true);
+        $this->attributeMock
+            ->expects($this->once())
+            ->method('getData')
+            ->with('advlaynav_input_type')
+            ->willReturn($type);
+        $result = $this->advLayNavHelper->isAdvLayNavMultiSelectAttribute($this->attributeMock);
+        if ($boolResult) {
+            $this->assertTrue($result);
+            return;
+        }
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @return array
+     */
+    public function dataIsAdvLayNavMultiSelectAttributeTrue()
+    {
+        return [
+            [
+                'multi_select',
                 true,
             ],
             [

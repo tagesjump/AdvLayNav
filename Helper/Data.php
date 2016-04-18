@@ -36,6 +36,19 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Checks if the given attribute is a multi select.
+     *
+     * @param Attribute $attribute
+     * @return bool
+     */
+    public function isAdvLayNavMultiSelectAttribute(Attribute $attribute)
+    {
+        $this->extractAdditionalDataEavAttribute($attribute);
+
+        return $attribute->getData($this->inputKey) === AdvLayNav::INPUT_TYPE_MULTI_SELECT;
+    }
+
+    /**
      * Takes the AdvLayNav data if they exist from the attribute and stores them in additional data of the attribute.
      *
      * @param Attribute $attribute
