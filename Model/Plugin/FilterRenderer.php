@@ -81,6 +81,7 @@ class FilterRenderer
                 return $this->layout
                     ->createBlock($this->multiSelectBlock)
                     ->setAdvLayNavFilter($filter)
+                    ->setHtmlPagerBlock($this->layout->getBlock('product_list_toolbar_pager'))
                     ->toHtml();
             }
         }

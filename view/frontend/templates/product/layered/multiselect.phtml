@@ -13,9 +13,17 @@
 <ol class="items">
     <?php foreach ($block->getFilterItems() as $filterItem): ?>
         <li class="item">
-            <a href="<?php echo $block->escapeUrl($filterItem->getUrl()) ?>">
-                <input type="checkbox"><?php /* @escapeNotVerified */ echo $filterItem->getLabel() ?>
-            </a>
+            <?php if ($block->isFilterItemActive($filterItem)): ?>
+                <a href="<?php echo $block->escapeUrl($block->getFilterItemRemoveUrl($filterItem)) ?>">
+                    <input type="checkbox" checked>
+                    <?php /* @escapeNotVerified */ echo $filterItem->getLabel() ?>
+                </a>
+            <?php else: ?>
+                <a href="<?php echo $block->escapeUrl($block->getFilterItemUrl($filterItem)) ?>">
+                    <input type="checkbox">
+                    <?php /* @escapeNotVerified */ echo $filterItem->getLabel() ?>
+                </a>
+            <?php endif ?>
         </li>
     <?php endforeach ?>
 </ol>
