@@ -11,4 +11,10 @@
     <type name="Magento\Framework\View\Result\Page">
         <plugin name="render_advlaynav_ajax_request" type="Part\AdvLayNav\Model\Plugin\Page"/>
     </type>
+    <type name="Magento\CatalogSearch\Model\Layer\Filter\Attribute">
+        <plugin name="apply_multi_select_filter_attribute" type="Part\AdvLayNav\Model\Plugin\Attribute"/>
+    </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Layer\Filter\Attribute">
+        <plugin name="apply_multi_select_resource_filter_attribute" type="Part\AdvLayNav\Model\Plugin\ResourceAttribute"/>
+    </type>
 </config>

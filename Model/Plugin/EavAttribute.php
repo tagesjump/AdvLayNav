@@ -7,8 +7,6 @@
  */
 namespace Part\AdvLayNav\Model\Plugin;
 
-use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
-
 /**
  * Class EavAttribute
  */
@@ -34,10 +32,10 @@ class EavAttribute
     /**
      * Set base data to Attribute
      *
-     * @param Attribute $attribute
+     * @param \Magento\Catalog\Model\ResourceModel\Eav\Attribute $attribute
      * @return void
      */
-    public function beforeSave(Attribute $attribute)
+    public function beforeSave(\Magento\Catalog\Model\ResourceModel\Eav\Attribute $attribute)
     {
         $this->advLayNavHelper->assembleAdditionalDataEavAttribute($attribute);
     }
