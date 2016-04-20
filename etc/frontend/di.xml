@@ -11,7 +11,5 @@
     <type name="Magento\Framework\View\Result\Page">
         <plugin name="render_advlaynav_ajax_request" type="Part\AdvLayNav\Model\Plugin\Page"/>
     </type>
-    <type name="Magento\CatalogSearch\Model\Layer\Filter\Attribute">
-        <plugin name="apply_multi_select_filter_attribute" type="Part\AdvLayNav\Model\Plugin\Attribute"/>
-    </type>
+    <preference for="Magento\CatalogSearch\Model\Layer\Filter\Attribute" type="Part\AdvLayNav\Model\CatalogSearch\Layer\Filter\Attribute" />
 </config>
