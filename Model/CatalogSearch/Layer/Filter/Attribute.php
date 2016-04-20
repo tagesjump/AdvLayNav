@@ -25,10 +25,18 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
     private $myTagFilter;
 
     /**
+     * Item collection factory
+     *
+     * @var \Magento\CatalogSearch\Model\Layer\Category\ItemCollectionProvider
+     */
+    private $itemCollectionProvider;
+
+    /**
      * @param \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Catalog\Model\Layer $layer
      * @param \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder
+     * @param \Magento\CatalogSearch\Model\Layer\Category\ItemCollectionProvider
      * @param \Magento\Framework\Filter\StripTags $tagFilter
      * @param \Part\AdvLayNav\Helper\Data
      * @param array $data
@@ -39,6 +47,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
         \Magento\Catalog\Model\Layer $layer,
         \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder,
         \Magento\Framework\Filter\StripTags $tagFilter,
+        \Magento\CatalogSearch\Model\Layer\Category\ItemCollectionProvider $itemCollectionProvider,
         \Part\AdvLayNav\Helper\Data $advLayNavHelper,
         array $data = []
     ) {
@@ -51,6 +60,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
             $data
         );
         $this->myTagFilter = $tagFilter;
+        $this->itemCollectionProvider = $itemCollectionProvider;
         $this->advLayNavHelper = $advLayNavHelper;
     }
 
@@ -93,7 +103,9 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
             $attributeCode = $attribute->getAttributeCode();
             /** @var \Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection $productCollection */
             $productCollection = $this->getLayer()->getProductCollection();
-            $productCollection->addFieldToFilter($attributeCode, []);
+            if ($this->isFilterApplied($this->getLayer()->getState()->getFilters())) {
+                $productCollection = $this->getUnfilteredProductCollection();
+            }
             $optionsFacetedData = $productCollection->getFacetedData($attributeCode);
 
             $productSize = $productCollection->getSize();
@@ -112,16 +124,33 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
                     continue;
                 }
                 $this->itemDataBuilder->addItemData(
-                    $this->tagFilter->filter($option['label']),
+                    $this->myTagFilter->filter($option['label']),
                     $option['value'],
                     $optionsFacetedData[$option['value']]['count']
                 );
             }
-            $result = $this->itemDataBuilder->build();
-            // $productCollection->addFieldToFilter($attributeCode, $filter);
-
-            return $result;
+            return $this->itemDataBuilder->build();
         }
         return parent::_getItemsData();
+    }
+
+    private function isFilterApplied(array $filters)
+    {
+        foreach ($filters as $filter) {
+            $appliedAttributeCode = $filter->getFilter()->getAttributeModel()->getAttributeCode();
+            if ($appliedAttributeCode === $this->getAttributeModel()->getAttributeCode()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function getUnfilteredProductCollection()
+    {
+        $layer = $this->getLayer();
+        $productCollection = $this->itemCollectionProvider->getCollection($layer->getCurrentCategory());
+        $layer->prepareProductCollection($productCollection);
+
+        return $productCollection;
     }
 }
