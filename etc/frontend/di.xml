@@ -12,4 +12,5 @@
         <plugin name="render_advlaynav_ajax_request" type="Part\AdvLayNav\Model\Plugin\Page"/>
     </type>
     <preference for="Magento\CatalogSearch\Model\Layer\Filter\Attribute" type="Part\AdvLayNav\Model\CatalogSearch\Layer\Filter\Attribute" />
+    <preference for="Magento\CatalogSearch\Model\Layer\Filter\Price" type="Part\AdvLayNav\Model\CatalogSearch\Layer\Filter\Price" />
 </config>
