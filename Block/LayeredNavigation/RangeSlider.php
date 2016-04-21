@@ -139,12 +139,30 @@ class RangeSlider extends AbstractRenderLayered
     {
         if (is_null($this->minValue) || is_null($this->maxValue)) {
             $productCollection = $this->filter->getLayer()->getCurrentCategory()->getProductCollection();
-            $productCollection->addPriceData(
-                $this->_session->getCustomerGroupId(),
-                $this->_storeManager->getStore()->getWebsiteId()
-            );
-            $this->minValue = $productCollection->getMinPrice();
-            $this->maxValue = $productCollection->getMaxPrice();
+            $attributeCode = $this->filter->getAttributeModel()->getAttributeCode();
+            if ($this->filter->getAttributeModel()->getAttributeCode() == 'price') {
+                $productCollection->addPriceData(
+                    $this->_session->getCustomerGroupId(),
+                    $this->_storeManager->getStore()->getWebsiteId()
+                );
+                $this->minValue = $productCollection->getMinPrice();
+                $this->maxValue = $productCollection->getMaxPrice();
+            } else {
+                $this->minValue = INF;
+                $this->maxValue = -INF;
+                $productCollection->addFieldToSelect($attributeCode);
+                foreach ($productCollection as $product) {
+                    $attributeValue = $product->getData($attributeCode);
+                    if (strlen((String) $attributeValue)) {
+                        if ($this->minValue > $attributeValue) {
+                            $this->minValue = $attributeValue;
+                        }
+                        if ($this->maxValue < $attributeValue) {
+                            $this->maxValue = $attributeValue;
+                        }
+                    }
+                }
+            }
         }
     }
 
