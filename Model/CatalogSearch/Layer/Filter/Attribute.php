@@ -134,10 +134,10 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
         return parent::_getItemsData();
     }
 
-    private function isFilterApplied(array $filters)
+    private function isFilterApplied(array $appliedfilters)
     {
-        foreach ($filters as $filter) {
-            $appliedAttributeCode = $filter->getFilter()->getAttributeModel()->getAttributeCode();
+        foreach ($appliedfilters as $appliedfilter) {
+            $appliedAttributeCode = $appliedfilter->getFilter()->getAttributeModel()->getAttributeCode();
             if ($appliedAttributeCode === $this->getAttributeModel()->getAttributeCode()) {
                 return true;
             }
@@ -148,8 +148,12 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
     private function getUnfilteredProductCollection()
     {
         $layer = $this->getLayer();
-        $productCollection = $this->itemCollectionProvider->getCollection($layer->getCurrentCategory());
-        $layer->prepareProductCollection($productCollection);
+        $productCollection = $layer->getData('unfiltered_product_collection');
+        if (!$productCollection) {
+            $productCollection = $this->itemCollectionProvider->getCollection($layer->getCurrentCategory());
+            $layer->prepareProductCollection($productCollection);
+            $layer->setData('unfiltered_product_collection', $productCollection);
+        }
 
         return $productCollection;
     }
