@@ -105,7 +105,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
             /** @var \Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection $productCollection */
             $productCollection = $layer->getProductCollection();
             if ($this->advLayNavHelper->isFilterApplied($layer->getState(), $attributeCode)) {
-                $productCollection = $layer->getCurrentCategory()->getProductCollection();
+                $productCollection = $this->getUnfilteredProductCollection();
             }
             $optionsFacetedData = $productCollection->getFacetedData($attributeCode);
 
@@ -133,5 +133,13 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
             return $this->itemDataBuilder->build();
         }
         return parent::_getItemsData();
+    }
+
+    private function getUnfilteredProductCollection()
+    {
+        $layer = $this->getLayer();
+        $productCollection = $this->itemCollectionProvider->getCollection($layer->getCurrentCategory());
+        $layer->prepareProductCollection($productCollection);
+        return $productCollection;
     }
 }

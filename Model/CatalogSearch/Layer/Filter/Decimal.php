@@ -129,6 +129,8 @@ class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
                         'to' => $this->toValue,
                         'max' => $maxValue,
                     ];
+                } else {
+                    $this->_items = [];
                 }
             }
             return $this;
