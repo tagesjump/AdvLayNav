@@ -74,6 +74,18 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $this;
     }
 
+    public function isFilterApplied(\Magento\Catalog\Model\Layer\State $state, $attributeCode)
+    {
+        $appliedFilters = $state->getFilters();
+        foreach ($appliedFilters as $appliedFilter) {
+            $appliedAttributeCode = $appliedFilter->getFilter()->getAttributeModel()->getAttributeCode();
+            if ($appliedAttributeCode === $attributeCode) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Takes the AdvLayNav data from the additional data of the attribute if they exist and stores them in the data of
      * the attribute.

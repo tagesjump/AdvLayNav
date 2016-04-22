@@ -13,4 +13,5 @@
     </type>
     <preference for="Magento\CatalogSearch\Model\Layer\Filter\Attribute" type="Part\AdvLayNav\Model\CatalogSearch\Layer\Filter\Attribute" />
     <preference for="Magento\CatalogSearch\Model\Layer\Filter\Price" type="Part\AdvLayNav\Model\CatalogSearch\Layer\Filter\Price" />
+    <preference for="Magento\CatalogSearch\Model\Layer\Filter\Decimal" type="Part\AdvLayNav\Model\CatalogSearch\Layer\Filter\Decimal" />
 </config>

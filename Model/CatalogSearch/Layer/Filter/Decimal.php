@@ -8,20 +8,10 @@
 namespace Part\AdvLayNav\Model\CatalogSearch\Layer\Filter;
 
 /**
- * Class Price
+ * Class Decimal
  */
-class Price extends \Magento\CatalogSearch\Model\Layer\Filter\Price
+class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
 {
-    /**
-     * @var \Magento\Customer\Model\Session
-     */
-    private $custSession;
-
-    /**
-     * @var \Magento\Catalog\Model\Layer\Filter\DataProvider\Price
-     */
-    private $priceDataProvider;
-
     /**
      * The AdvLayNav helper.
      *
@@ -38,28 +28,17 @@ class Price extends \Magento\CatalogSearch\Model\Layer\Filter\Price
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Catalog\Model\Layer $layer
      * @param \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder
-     * @param \Magento\Catalog\Model\ResourceModel\Layer\Filter\Price $resource
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Framework\Search\Dynamic\Algorithm $priceAlgorithm
+     * @param \Magento\Catalog\Model\ResourceModel\Layer\Filter\DecimalFactory $filterDecimalFactory
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
-     * @param \Magento\Catalog\Model\Layer\Filter\Dynamic\AlgorithmFactory $algorithmFactory
-     * @param \Magento\Catalog\Model\Layer\Filter\DataProvider\PriceFactory $dataProviderFactory
-     * @param \Part\AdvLayNav\Helper\Data $advLayNavHelper
      * @param array $data
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Model\Layer $layer,
         \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder,
-        \Magento\Catalog\Model\ResourceModel\Layer\Filter\Price $resource,
-        \Magento\Customer\Model\Session $customerSession,
-        \Magento\Framework\Search\Dynamic\Algorithm $priceAlgorithm,
+        \Magento\Catalog\Model\ResourceModel\Layer\Filter\DecimalFactory $filterDecimalFactory,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
-        \Magento\Catalog\Model\Layer\Filter\Dynamic\AlgorithmFactory $algorithmFactory,
-        \Magento\Catalog\Model\Layer\Filter\DataProvider\PriceFactory $dataProviderFactory,
         \Part\AdvLayNav\Helper\Data $advLayNavHelper,
         array $data = []
     ) {
@@ -68,25 +47,19 @@ class Price extends \Magento\CatalogSearch\Model\Layer\Filter\Price
             $storeManager,
             $layer,
             $itemDataBuilder,
-            $resource,
-            $customerSession,
-            $priceAlgorithm,
+            $filterDecimalFactory,
             $priceCurrency,
-            $algorithmFactory,
-            $dataProviderFactory,
             $data
         );
-        $this->custSession = $customerSession;
-        $this->priceDataProvider = $dataProviderFactory->create(['layer' => $this->getLayer()]);
         $this->advLayNavHelper = $advLayNavHelper;
     }
 
     /**
-     * Apply price range filter
+     * Apply decimal range filter
      *
      * @param \Magento\Framework\App\RequestInterface $request
      * @return $this
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function apply(\Magento\Framework\App\RequestInterface $request)
     {
@@ -97,23 +70,19 @@ class Price extends \Magento\CatalogSearch\Model\Layer\Filter\Price
                 return $this;
             }
 
-            $filterParams = explode(',', $filter);
-            $filter = $this->priceDataProvider->validateFilter($filterParams[0]);
-            if (!$filter) {
-                return $this;
-            }
-
-            list($from, $to) = $filter;
+            list($from, $to) = explode('-', $filter);
             $this->fromValue = $from;
             $this->toValue = $to;
 
-            $this->getLayer()->getProductCollection()->addFieldToFilter(
-                'price',
-                ['from' => $from, 'to' =>  empty($to) || $from == $to ? $to : $to - self::PRICE_DELTA]
-            );
+            $this->getLayer()
+                ->getProductCollection()
+                ->addFieldToFilter(
+                    $this->getAttributeModel()->getAttributeCode(),
+                    ['from' => $from, 'to' => $to]
+                );
 
             $this->getLayer()->getState()->addFilter(
-                $this->_createItem($this->_renderRangeLabel(empty($from) ? 0 : $from, $to), $filter)
+                $this->_createItem($this->renderRangeLabel(empty($from) ? 0 : $from, $to), $filter)
             );
 
             return $this;
@@ -138,16 +107,26 @@ class Price extends \Magento\CatalogSearch\Model\Layer\Filter\Price
                 if ($this->advLayNavHelper->isFilterApplied($layer->getState(), $attributeCode)) {
                     $productCollection = $layer->getCurrentCategory()->getProductCollection();
                 }
-                $productCollection->addPriceData(
-                    $this->custSession->getCustomerGroupId(),
-                    $this->_storeManager->getStore()->getWebsiteId()
-                );
+                $productCollection->addFieldToSelect($attributeCode);
+                $minValue = INF;
+                $maxValue = -INF;
+                foreach ($productCollection as $product) {
+                    $attributeValue = $product->getData($attributeCode);
+                    if (strlen((String) $attributeValue)) {
+                        if ($minValue > $attributeValue) {
+                            $minValue = $attributeValue;
+                        }
+                        if ($maxValue < $attributeValue) {
+                            $maxValue = $attributeValue;
+                        }
+                    }
+                }
 
                 $this->_items = [
-                    'min' => $productCollection->getMinPrice(),
+                    'min' => $minValue,
                     'from' => $this->fromValue,
                     'to' => $this->toValue,
-                    'max' => $productCollection->getMaxPrice(),
+                    'max' => $maxValue,
                 ];
             }
             return $this;

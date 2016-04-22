@@ -101,10 +101,11 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
         $attribute = $this->getAttributeModel();
         if ($this->advLayNavHelper->isAdvLayNavMultiSelectAttribute($attribute)) {
             $attributeCode = $attribute->getAttributeCode();
+            $layer = $this->getLayer();
             /** @var \Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection $productCollection */
-            $productCollection = $this->getLayer()->getProductCollection();
-            if ($this->isFilterApplied($this->getLayer()->getState()->getFilters())) {
-                $productCollection = $this->getUnfilteredProductCollection();
+            $productCollection = $layer->getProductCollection();
+            if ($this->advLayNavHelper->isFilterApplied($layer->getState(), $attributeCode)) {
+                $productCollection = $layer->getCurrentCategory()->getProductCollection();
             }
             $optionsFacetedData = $productCollection->getFacetedData($attributeCode);
 
@@ -132,29 +133,5 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
             return $this->itemDataBuilder->build();
         }
         return parent::_getItemsData();
-    }
-
-    private function isFilterApplied(array $appliedfilters)
-    {
-        foreach ($appliedfilters as $appliedfilter) {
-            $appliedAttributeCode = $appliedfilter->getFilter()->getAttributeModel()->getAttributeCode();
-            if ($appliedAttributeCode === $this->getAttributeModel()->getAttributeCode()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function getUnfilteredProductCollection()
-    {
-        $layer = $this->getLayer();
-        $productCollection = $layer->getData('unfiltered_product_collection');
-        if (!$productCollection) {
-            $productCollection = $this->itemCollectionProvider->getCollection($layer->getCurrentCategory());
-            $layer->prepareProductCollection($productCollection);
-            $layer->setData('unfiltered_product_collection', $productCollection);
-        }
-
-        return $productCollection;
     }
 }
