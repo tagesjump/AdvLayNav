@@ -34,4 +34,14 @@ abstract class AbstractRenderLayered extends Template
 
         return $this;
     }
+
+    /**
+     * Returns the request value of the filter.
+     *
+     * @return string
+     */
+    public function getFilterRequestVar()
+    {
+        return $this->filter->getRequestVar();
+    }
 }

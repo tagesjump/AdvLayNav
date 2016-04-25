@@ -121,16 +121,6 @@ class RangeSlider extends AbstractRenderLayered
     }
 
     /**
-     * Returns the request value of the filter.
-     *
-     * @return string
-     */
-    public function getFilterRequestVar()
-    {
-        return $this->filter->getRequestVar();
-    }
-
-    /**
      * Initializes the minimum and maximum value of the attribute and attaches them to the RenderLayered object.
      *
      * @return void
