@@ -5,12 +5,47 @@
  * file that was distributed with this source code.
  */
 
-define( [ "jquery", "advlaynav/ajaxcall", "jquery/ui" ], function( $, ajaxCall ) {
+define( [ "jquery", "mage/apply/main", "domReady" , "jquery/ui" ], function( $, mage, domReady ) {
     "use strict";
 
-    $.widget( "part.advlaynav", {
-        _create: function() {
-            this.element.find( "a" ).each( function() {
+    var ajaxCall = function( url ) {
+        var productListBlockName = $( "#advlaynav_product_list_before" ).attr( "data-block-name" );
+        var navigationBlockName = $( "#advlaynav_navigation_before" ).attr( "data-block-name" );
+        var blockNameParameters = "&productListBlockName=" + productListBlockName +
+            "&navigationBlockName=" + navigationBlockName;
+        var ajaxUrl = url;
+        if ( ajaxUrl.indexOf( "?" ) > -1 ) {
+            ajaxUrl += "&advLayNavAjax=1" + blockNameParameters;
+        } else {
+            ajaxUrl += "?advLayNavAjax=1" + blockNameParameters;
+        }
+        $.ajax( {
+            "url": ajaxUrl,
+            dataType: "json"
+        } ).done( function( data ) {
+            history.pushState( {}, "", url );
+            var productListContent = data[ 0 ];
+            var leftNavContent = data[ 1 ];
+
+            $( "#advlaynav_product_list_before" )
+                .nextUntil( "#advlaynav_product_list_after" )
+                .remove();
+            $( productListContent ).insertAfter( $( "#advlaynav_product_list_before" ) );
+
+            $( "#advlaynav_navigation_before" )
+                .nextUntil( "#advlaynav_navigation_after" )
+                .remove();
+            $( leftNavContent ).insertAfter( $( "#advlaynav_navigation_before" ) );
+
+            $( mage.apply );
+            initAjaxNavigation();
+        } );
+    };
+
+    var initAjaxNavigation = function() {
+        $( "#advlaynav_navigation_before" )
+            .nextUntil( "#advlaynav_navigation_after" )
+            .find( "a" ).each( function() {
                 var link = $( this );
                 if ( link.attr( "href" ) !== "#" ) {
                     link.attr( "onclick", "return false;" );
@@ -20,8 +55,14 @@ define( [ "jquery", "advlaynav/ajaxcall", "jquery/ui" ], function( $, ajaxCall )
                     } );
                 }
             } );
-        }
-    } );
+    }
 
-    return $.part.advlaynav;
+    $.widget('part.advlaynav', {
+        _create: initAjaxNavigation
+    });
+
+    return {
+        "advlaynav": $.part.advlaynav,
+        "ajaxCall": ajaxCall
+    };
 } );

@@ -11,7 +11,6 @@ var config = {
     map: {
         "*": {
             "advlaynav": "Part_AdvLayNav/js/advlaynav",
-            "advlaynav/ajaxcall": "Part_AdvLayNav/js/ajaxcall",
             "advlaynav/rangeslider": "Part_AdvLayNav/js/rangeslider"
         }
     }

@@ -5,7 +5,7 @@
  * file that was distributed with this source code.
  */
 
-define( [ "jquery", "advlaynav/ajaxcall", "jquery/ui" ], function( $, ajaxCall ) {
+define( [ "jquery", "advlaynav", "jquery/ui" ], function( $, advlaynav ) {
     "use strict";
 
     var createRangeSlider = function(
@@ -39,7 +39,7 @@ define( [ "jquery", "advlaynav/ajaxcall", "jquery/ui" ], function( $, ajaxCall )
                     }
                     ajaxUrl = valueUrl.replace( "option_id_placeholder", replace );
                 }
-                ajaxCall( ajaxUrl );
+                advlaynav.ajaxCall( ajaxUrl );
             }
         } );
         $( "#" + amountId ).text( $( "#" + sliderId ).slider( "values", 0 ) +
