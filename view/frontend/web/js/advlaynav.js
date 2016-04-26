@@ -5,7 +5,7 @@
  * file that was distributed with this source code.
  */
 
-define( [ "jquery", "mage/apply/main", "domReady" , "jquery/ui" ], function( $, mage, domReady ) {
+define( [ "jquery", "mage/apply/main" , "jquery/ui" ], function( $, mage ) {
     "use strict";
 
     var ajaxCall = function( url ) {

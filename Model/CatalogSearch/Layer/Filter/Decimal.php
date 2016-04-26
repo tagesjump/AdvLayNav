@@ -103,7 +103,7 @@ class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
                 $attributeCode = $attribute->getAttributeCode();
                 $layer = $this->getLayer();
                 /** @var \Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection $productCollection */
-                $productCollection = $layer->getProductCollection();
+                $productCollection = clone($layer->getProductCollection());
                 if ($this->advLayNavHelper->isFilterApplied($layer->getState(), $attributeCode)) {
                     $productCollection = $layer->getCurrentCategory()->getProductCollection();
                 }
