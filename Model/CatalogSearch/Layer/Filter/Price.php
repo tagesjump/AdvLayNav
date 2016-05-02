@@ -142,13 +142,25 @@ class Price extends \Magento\CatalogSearch\Model\Layer\Filter\Price
                     $this->custSession->getCustomerGroupId(),
                     $this->_storeManager->getStore()->getWebsiteId()
                 );
+                $minValue = $productCollection->getMinPrice();
+                $maxValue = $productCollection->getMaxPrice();
+                if (!$this->fromValue) {
+                    $this->fromValue = $minValue;
+                }
+                if (!$this->toValue) {
+                    $this->toValue = $maxValue;
+                }
 
-                $this->_items = [
-                    'min' => $productCollection->getMinPrice(),
-                    'from' => $this->fromValue,
-                    'to' => $this->toValue,
-                    'max' => $productCollection->getMaxPrice(),
-                ];
+                if ($minValue == $maxValue) {
+                    $this->_items = [];
+                } else {
+                    $this->_items = [
+                        'min' => $minValue,
+                        'from' => $this->fromValue,
+                        'to' => $this->toValue,
+                        'max' => $maxValue,
+                    ];
+                }
             }
             return $this;
         }

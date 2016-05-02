@@ -121,8 +121,14 @@ class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
                         }
                     }
                 }
+                if (!$this->fromValue) {
+                    $this->fromValue = $minValue;
+                }
+                if (!$this->toValue) {
+                    $this->toValue = $maxValue;
+                }
 
-                if ($minValue < INF && $maxValue > -INF) {
+                if ($minValue < INF && $maxValue > -INF && $minValue != $maxValue) {
                     $this->_items = [
                         'min' => $minValue,
                         'from' => $this->fromValue,

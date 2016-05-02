@@ -36,6 +36,14 @@ abstract class AbstractRenderLayered extends Template
     }
 
     /**
+     * @return \Magento\Catalog\Model\Layer\Filter\AbstractFilter
+     */
+    public function getFilter()
+    {
+        return $this->filter;
+    }
+
+    /**
      * Returns the request value of the filter.
      *
      * @return string
