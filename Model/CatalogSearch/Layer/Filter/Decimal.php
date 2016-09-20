@@ -107,20 +107,9 @@ class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
                 if ($this->advLayNavHelper->isFilterApplied($layer->getState(), $attributeCode)) {
                     $productCollection = $layer->getCurrentCategory()->getProductCollection();
                 }
-                $productCollection->addFieldToSelect($attributeCode);
-                $minValue = INF;
-                $maxValue = -INF;
-                foreach ($productCollection as $product) {
-                    $attributeValue = $product->getData($attributeCode);
-                    if (strlen((String) $attributeValue)) {
-                        if ($minValue > $attributeValue) {
-                            $minValue = $attributeValue;
-                        }
-                        if ($maxValue < $attributeValue) {
-                            $maxValue = $attributeValue;
-                        }
-                    }
-                }
+                $minMax = $this->getMinAndMaxValue($productCollection, $attributeCode);
+                $minValue = $minMax[0];
+                $maxValue = $minMax[1];
                 if (!$this->fromValue) {
                     $this->fromValue = $minValue;
                 }
@@ -128,7 +117,7 @@ class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
                     $this->toValue = $maxValue;
                 }
 
-                if ($minValue < INF && $maxValue > -INF && $minValue != $maxValue) {
+                if ($minValue !== null && $maxValue !== null && $minValue != $maxValue) {
                     $this->_items = [
                         'min' => $minValue,
                         'from' => $this->fromValue,
@@ -142,5 +131,24 @@ class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
             return $this;
         }
         return parent::_initItems();
+    }
+
+    private function getMinAndMaxValue(
+        \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection,
+        $attributeCode
+    ) {
+        $select = clone $productCollection->getSelect();
+        $select->reset(\Magento\Framework\DB\Select::ORDER);
+        $select->reset(\Magento\Framework\DB\Select::LIMIT_COUNT);
+        $select->reset(\Magento\Framework\DB\Select::LIMIT_OFFSET);
+        $select->reset(\Magento\Framework\DB\Select::COLUMNS);
+        $select->columns(
+            [
+                'min' => 'MIN(e.' . $attributeCode . ')',
+                'max' => 'MAX(e.' . $attributeCode . ')',
+            ]
+        );
+        $select->where('e.' . $attributeCode . ' IS NOT NULL');
+        return $select->getConnection()->fetchRow($select, [], \Zend_Db::FETCH_NUM);
     }
 }
