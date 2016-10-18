@@ -83,4 +83,10 @@ class MultiSelect extends AbstractRenderLayered
 
         return in_array($item->getValue(), $requestParameters);
     }
+
+    public function isFilterActive()
+    {
+        $requestParameters = $this->_request->getParam($this->filter->getRequestVar());
+        return isset($requestParameters);
+    }
 }
