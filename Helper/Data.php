@@ -69,6 +69,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         if (!is_null($dataValue)) {
             $iniAdditionalData[$this->inputKey] = $dataValue;
             $attribute->setData('additional_data', serialize($iniAdditionalData));
+            if ($dataValue === AdvLayNav::INPUT_TYPE_RANGE_SLIDER ||
+                $dataValue === AdvLayNav::INPUT_TYPE_MULTI_SELECT) {
+                $attribute->setData('is_filterable', true);
+            }
         }
 
         return $this;

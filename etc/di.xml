@@ -14,4 +14,9 @@
     <type name="Magento\LayeredNavigation\Block\Navigation\FilterRenderer">
         <plugin name="advlaynav_layered_renderer" type="Part\AdvLayNav\Model\Plugin\FilterRenderer" sortOrder="1" />
     </type>
+    <type name="Magento\Catalog\Helper\Product\Flat\Indexer">
+        <arguments>
+            <argument name="addFilterableAttrs" xsi:type="boolean">true</argument>
+        </arguments>
+    </type>
 </config>
