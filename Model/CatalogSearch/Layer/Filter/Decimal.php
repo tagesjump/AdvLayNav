@@ -107,7 +107,7 @@ class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
                 if ($this->advLayNavHelper->isFilterApplied($layer->getState(), $attributeCode)) {
                     $productCollection = $layer->getCurrentCategory()->getProductCollection();
                 }
-                $minMax = $this->getMinAndMaxValue($productCollection, $attributeCode);
+                $minMax = $this->getMinAndMaxValue($productCollection, $attribute);
                 $minValue = $minMax[0];
                 $maxValue = $minMax[1];
                 if (!$this->fromValue) {
@@ -135,20 +135,43 @@ class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
 
     private function getMinAndMaxValue(
         \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection,
-        $attributeCode
+        $attribute
     ) {
         $select = clone $productCollection->getSelect();
+        $connection = $select->getConnection();
         $select->reset(\Magento\Framework\DB\Select::ORDER);
         $select->reset(\Magento\Framework\DB\Select::LIMIT_COUNT);
         $select->reset(\Magento\Framework\DB\Select::LIMIT_OFFSET);
         $select->reset(\Magento\Framework\DB\Select::COLUMNS);
-        $select->columns(
-            [
-                'min' => 'MIN(e.' . $attributeCode . ')',
-                'max' => 'MAX(e.' . $attributeCode . ')',
-            ]
-        );
-        $select->where('e.' . $attributeCode . ' IS NOT NULL');
-        return $select->getConnection()->fetchRow($select, [], \Zend_Db::FETCH_NUM);
+        if ($productCollection->isEnabledFlat()) {
+            $attributeCode = $attribute->getAttributeCode();
+            $select->columns(
+                [
+                    'min' => 'MIN(e.' . $attributeCode . ')',
+                    'max' => 'MAX(e.' . $attributeCode . ')',
+                ]
+            );
+            $select->where('e.' . $attributeCode . ' IS NOT NULL');
+        } else {
+            $select->join(
+                ['decimal_index' => $productCollection->getTable('catalog_product_index_eav_decimal')],
+                'e.entity_id = decimal_index.entity_id' . ' AND ' . $connection->quoteInto(
+                    'decimal_index.attribute_id = ?',
+                    $attribute->getId()
+                ) . ' AND ' . $connection->quoteInto(
+                    'decimal_index.store_id = ?',
+                    $productCollection->getStoreId()
+                ),
+                []
+            );
+            $select->columns(
+                [
+                    'min' => 'MIN(decimal_index.value)',
+                    'max' => 'MAX(decimal_index.value)',
+                ]
+            );
+            $select->where('decimal_index.value IS NOT NULL');
+        }
+        return $connection->fetchRow($select, [], \Zend_Db::FETCH_NUM);
     }
 }
