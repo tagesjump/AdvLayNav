@@ -70,19 +70,22 @@ class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
                 return $this;
             }
 
-            list($from, $to) = explode('-', $filter);
-            $this->fromValue = $from;
-            $this->toValue = $to;
+            $explode = explode('-', $filter);
+            $this->fromValue = isset($explode[0]) ? $explode[0] : null;
+            $this->toValue = isset($explode[1]) ? $explode[1] : null;
 
             $this->getLayer()
                 ->getProductCollection()
                 ->addFieldToFilter(
                     $this->getAttributeModel()->getAttributeCode(),
-                    ['from' => $from, 'to' => $to]
+                    ['from' => $this->fromValue, 'to' => $this->toValue]
                 );
 
             $this->getLayer()->getState()->addFilter(
-                $this->_createItem($this->renderRangeLabel(empty($from) ? 0 : $from, $to), $filter)
+                $this->_createItem(
+                    $this->renderRangeLabel(empty($this->fromValue) ? 0 : $this->fromValue, $this->toValue),
+                    $filter
+                )
             );
 
             return $this;
