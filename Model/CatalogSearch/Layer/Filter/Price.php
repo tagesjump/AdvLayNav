@@ -155,10 +155,10 @@ class Price extends \Magento\CatalogSearch\Model\Layer\Filter\Price
                     $this->_items = [];
                 } else {
                     $this->_items = [
-                        'min' => $minValue,
-                        'from' => $this->fromValue,
-                        'to' => $this->toValue,
-                        'max' => $maxValue,
+                        'min' => max(0, floor($minValue)),
+                        'from' =>  max(0, $this->fromValue),
+                        'to' =>  max(0, $this->toValue),
+                        'max' =>  max(0, ceil($maxValue)),
                     ];
                 }
             }
