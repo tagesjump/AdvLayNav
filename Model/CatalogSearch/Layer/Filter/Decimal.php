@@ -111,8 +111,8 @@ class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
                     $productCollection = $layer->getCurrentCategory()->getProductCollection();
                 }
                 $minMax = $this->getMinAndMaxValue($productCollection, $attribute);
-                $minValue = $minMax[0];
-                $maxValue = $minMax[1];
+                $minValue = floor($minMax[0]);
+                $maxValue = ceil($minMax[1]);
                 if (!$this->fromValue) {
                     $this->fromValue = $minValue;
                 }
@@ -122,10 +122,10 @@ class Decimal extends \Magento\CatalogSearch\Model\Layer\Filter\Decimal
 
                 if ($minValue !== null && $maxValue !== null && $minValue != $maxValue) {
                     $this->_items = [
-                        'min' =>  max(0, floor($minValue)),
+                        'min' =>  max(0, $minValue),
                         'from' =>  max(0, $this->fromValue),
                         'to' =>  max(0, $this->toValue),
-                        'max' =>  max(0, ceil($maxValue)),
+                        'max' =>  max(0, $maxValue),
                     ];
                 } else {
                     $this->_items = [];
