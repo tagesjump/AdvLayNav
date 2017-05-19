@@ -23,10 +23,13 @@ class ProcessLayoutRenderElementObserver implements ObserverInterface
         'product_list' => [
             'category.products.list',
             'search.result',
+            'searchindex.result'
         ],
         'navigation' => [
             'catalog.leftnav',
             'catalogsearch.leftnav',
+            'catalogsearch.leftnav',
+
         ],
     ];
 
