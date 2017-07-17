@@ -46,7 +46,7 @@ define( [ "jquery", "mage/apply/main" , "jquery/ui" ], function( $, mage ) {
     var initAjaxNavigation = function() {
         $( "#advlaynav_navigation_before" )
             .nextUntil( "#advlaynav_navigation_after" )
-            .find( "a" ).not('.ignore-ajax').each( function() {
+            .find( "a:not('.ignore-ajax')" ).each( function() {
                 var link = $( this );
                 if ( link.attr( "href" ) !== "#" ) {
                     link.attr( "onclick", "return false;" );
