@@ -11,8 +11,9 @@ define( [ "jquery", "mage/apply/main" , "jquery/ui" ], function( $, mage ) {
     var ajaxCall = function( url ) {
         var productListBlockName = $( "#advlaynav_product_list_before" ).attr( "data-block-name" );
         var navigationBlockName = $( "#advlaynav_navigation_before" ).attr( "data-block-name" );
+       var pageTitleBlockName = $('#advlaynav_page_title_before').attr( "data-block-name" );
         var blockNameParameters = "&productListBlockName=" + productListBlockName +
-            "&navigationBlockName=" + navigationBlockName;
+            "&navigationBlockName=" + navigationBlockName+"&pageTitleBlockName="+pageTitleBlockName;
         var ajaxUrl = url;
         if ( ajaxUrl.indexOf( "?" ) > -1 ) {
             ajaxUrl += "&advLayNavAjax=1" + blockNameParameters;
@@ -27,6 +28,7 @@ define( [ "jquery", "mage/apply/main" , "jquery/ui" ], function( $, mage ) {
             history.pushState( {}, "", url );
             var productListContent = data[ 0 ];
             var leftNavContent = data[ 1 ];
+            var pageTitleContent = data[2];
 
             $( "#advlaynav_product_list_before" )
                 .nextUntil( "#advlaynav_product_list_after" )
@@ -37,6 +39,10 @@ define( [ "jquery", "mage/apply/main" , "jquery/ui" ], function( $, mage ) {
                 .nextUntil( "#advlaynav_navigation_after" )
                 .remove();
             $( leftNavContent ).insertAfter( $( "#advlaynav_navigation_before" ) );
+
+            $('#advlaynav_page_title_before').nextUntil( "#advlaynav_page_title_after" )
+                .remove();
+            $(pageTitleContent ).insertAfter( $( "#advlaynav_page_title_after" ) );
 
             $( mage.apply );
             initAjaxNavigation();

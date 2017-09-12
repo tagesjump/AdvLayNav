@@ -23,7 +23,7 @@ class ProcessLayoutRenderElementObserver implements ObserverInterface
         'product_list' => [
             'category.products.list',
             'search.result',
-            'searchindex.result'
+            'searchindex.result',
         ],
         'navigation' => [
             'catalog.leftnav',
@@ -31,6 +31,9 @@ class ProcessLayoutRenderElementObserver implements ObserverInterface
             'catalogsearch.leftnav',
 
         ],
+        'page_title'=>[
+            'page.main.title'
+        ]
     ];
 
     /**

@@ -60,16 +60,20 @@ class Page
             $layout = $subject->getLayout();
             $prodListBlockParam = urldecode($this->request->getParam('productListBlockName'));
             $navBlockParam = urldecode($this->request->getParam('navigationBlockName'));
+            $pageTitleBlockParam = urlencode($this->request->getParam('pageTitleBlockName'));
             $productListBlock = $layout->getBlock($prodListBlockParam);
             $leftnavBlock = $layout->getBlock($navBlockParam);
+            $pageTitleBlock = $layout->getBlock($pageTitleBlockParam);
             $parameters = [
                 '&advLayNavAjax=1',
                 '&productListBlockName='.$prodListBlockParam,
                 '&navigationBlockName='.$navBlockParam,
+                '&pageTitleBlockName=page.main.title'
             ];
             $data = [
                 $this->removeUriParameters($productListBlock->toHtml(), $parameters),
                 $this->removeUriParameters($leftnavBlock->toHtml(), $parameters),
+                $this->removeUriParameters( $pageTitleBlock->toHtml(), $parameters),
             ];
             $response->appendBody(json_encode($data));
 

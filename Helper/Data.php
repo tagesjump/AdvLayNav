@@ -45,6 +45,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $this->extractAdditionalDataEavAttribute($attribute);
 
+        if($attribute->getAttributeCode()=='instock'){
+            die('ds');
+        }
+
         return $attribute->getData($this->inputKey) === AdvLayNav::INPUT_TYPE_MULTI_SELECT;
     }
 
