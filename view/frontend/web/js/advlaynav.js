@@ -42,7 +42,7 @@ define( [ "jquery", "mage/apply/main" , "jquery/ui" ], function( $, mage ) {
 
             $('#advlaynav_page_title_before').nextUntil( "#advlaynav_page_title_after" )
                 .remove();
-            $(pageTitleContent ).insertAfter( $( "#advlaynav_page_title_after" ) );
+            $(pageTitleContent ).insertAfter( $( "#advlaynav_page_title_before" ) );
 
             $( mage.apply );
             initAjaxNavigation();
